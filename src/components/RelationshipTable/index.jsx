@@ -1,102 +1,52 @@
 import React from 'react';
 import ReactTable from 'react-table';
-import _ from 'lodash';
-import equals from 'deep-equal';
-import { serializeGraphsToData } from "../../helpers";
+import { isEmpty, remove } from 'lodash';
 import { handleSaveRelationship, deserializeDataToGraphs } from "../../shared";
 import COLUMNS from './Columns';
 import 'react-table/react-table.css';
-
-function ButtonFeature({ handleAddRelationship, handleSaveRelationship }) {
+import { AppContext } from '../../contexts';
+function ButtonFeature({ handleEditRelationship, handleSaveRelationship }) {
     const styles = {
         backgroundColor: '#dadada',
         borderRadius: '2px'
     }
     return (
         <div style={{ textAlign: 'right' }}>
-            <button style={styles} onClick={() => handleAddRelationship()}>Add</button>
+            <input type="checkbox" id="checkbox-editmode" /> Edit mode
+
             <button style={styles} onClick={() => handleSaveRelationship()} >Save</button>
         </div>
     )
 }
 class RelationshipTable extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: [], /**example data = [
-                {
-                    node:{
-                        id: 'L4_21B_NODE',
-                        type:'store',
-                        name:'L4-21B'
-                    },
-                    neighbors:[
-                        {
-                            id: 'L4_20_NODE',
-                            type:'store',
-                            name:'L4-20'
-                        },
-                        {
-                            ...
-                        }
-                    ]
-                },
-                {...}
-            ] 
-            */
-            removed: [],
-            count: 0,
-            graphs: {}
-        };
-    }
-    componentDidMount() {
-        const { graphs } = this.props;
-        const graphArr = serializeGraphsToData(graphs);
-        this.setState({ graphs: graphs, data: graphArr });
-    }
-    static getDerivedStateFromProps(nextProps, currentState) {
-        // console.log("getDerivedStateFromProps : nextProps ", nextProps);
-        // console.log("getDerivedStateFromProps : currentState ", currentState);
-
-        if (!equals(nextProps.graphs, currentState.graphs)) {
-            const { graphs } = nextProps;
-            const graphsArray = serializeGraphsToData(graphs);
-            return {
-                data: graphsArray,
-                graphs: graphs
-            }
-        }
-        return null;
-    }
+    static contextType = AppContext;
     handleRemoveNeighbor = (node, neighbor) => {
-        const { data } = this.state;
+        const { data, graphs, removeRelationship } = this.context;
+        console.log("data", data);
+
         data.forEach(item => {
             //tìm node để xóa neighbor & tìm neighbor để xóa node 
             if (item.node === node || item.node.id === neighbor.id) {
-                const nodeRemoved = _.remove(item.neighbors, nb => nb === neighbor || nb.id === node.id);
-                // console.log('removed node and neighbor: ', nodeRemoved);
-                if (_.isEmpty(item.neighbors)) {
-                    _.remove(data, nodeNoNeighbor => nodeNoNeighbor.node.id === item.node.id);
-                    // console.log('item removed: ', itemRemoved);
+                const nodeRemoved = remove(item.neighbors, nb => nb === neighbor || nb.id === node.id);
+                if (isEmpty(item.neighbors)) {
+                    remove(data, nodeNoNeighbor => nodeNoNeighbor.node.id === item.node.id);
                 }
                 if (!nodeRemoved[0]) {
                     alert("Not found neighbor of node has id : " + node.id);
                     return;
                 }
-                this.props.removeRelationship({ node: node.id, neighbor: nodeRemoved[0].id });
+                //remove in graphs
+                removeRelationship(node.id, nodeRemoved[0].id);
+                //remove edges element
+                // deleteEdge(node, nodeRemoved[0]);
             }
         });
     };
     handleAddRelationship = () => {
         alert("This feature will be available in next version");
     }
-    onChangeData = (data) => {
-        const graphs = deserializeDataToGraphs(data);
-        this.setState({ data, graphs });
-        this.props.onChangeGraphs(graphs);
-        // this.props.onChangeData();
-    }
     getColumns = () => {
+        const { data, handleDataChange } = this.context;
         const columns = [
             {
                 ...COLUMNS.Node
@@ -105,13 +55,13 @@ class RelationshipTable extends React.Component {
                 ...COLUMNS.Type
             },
             {
-                ...COLUMNS.Neighbors(this.state.data, this.onChangeData)
+                ...COLUMNS.Neighbors(data, handleDataChange)
             },
             {
-                ...COLUMNS.NeighborsType(this.state.data, this.onChangeData)
+                ...COLUMNS.NeighborsType(data, handleDataChange)
             },
             {
-                ...COLUMNS.Cost(this.state.data, this.onChangeData)
+                ...COLUMNS.Cost(data, handleDataChange)
             },
             {
                 ...COLUMNS.Action(this.handleRemoveNeighbor)
@@ -119,28 +69,29 @@ class RelationshipTable extends React.Component {
         ];
         return columns;
     }
-    shouldComponentUpdate(nextProps, nextState) {
-        return this.state.graphs != nextState.graphs;
-    }
     render() {
         console.log("RelationshipTable");
         return (
-            <div>
-                <ButtonFeature
-                    handleSaveRelationship={() => handleSaveRelationship(this.state.data, "data")}
-                    handleAddRelationship={() => this.handleAddRelationship()}
-                />
-                <ReactTable
-                    filterable
-                    defaultFilterMethod={(filter, row) =>
-                        String(row[filter.id]) === filter.value}
-                    data={this.state.data}
-                    columns={this.getColumns()}
-                    defaultPageSize={5}
-                    showPagination={true}
-                    className="-striped -highlight"
-                />
-            </div>
+            <AppContext.Consumer>
+                {({ data }) => (
+                    <div>
+                        <ButtonFeature
+                            handleSaveRelationship={() => handleSaveRelationship(data, "data")}
+                            handleAddRelationship={() => this.handleAddRelationship()}
+                        />
+                        <ReactTable
+                            filterable
+                            defaultFilterMethod={(filter, row) =>
+                                String(row[filter.id]) === filter.value}
+                            data={data}
+                            columns={this.getColumns()}
+                            defaultPageSize={5}
+                            showPagination={true}
+                            className="-striped -highlight"
+                        />
+                    </div>
+                )}
+            </AppContext.Consumer>
         )
     }
 }

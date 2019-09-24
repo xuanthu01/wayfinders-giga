@@ -216,30 +216,24 @@ const highLightNodeEl = (nodeId, time, flagScrolling) => {
     }
 }
 const removeShortestPathEl = (idVertex1, idVertex2) => {
+    if (document.getElementsByClassName("animation-path").length !== 0) {
+        const noAnimation_Path = document.querySelectorAll(".noAnimation-path");
+        const animated_Path = document.querySelectorAll(".animation-path");
+        for (let i = 0; i < noAnimation_Path.length; i++) {
+            noAnimation_Path[i].parentElement.removeChild(noAnimation_Path[i]);
+        }
+        for (let i = 0; i < animated_Path.length; i++) {
+            animated_Path[i].parentElement.removeChild(animated_Path[i]);
+        }
+        let highLightEls = document.getElementsByClassName("highlight-circle");
 
-    const noAnimation_Path = document.querySelectorAll(".noAnimation-path");
-    const animated_Path = document.querySelectorAll(".animation-path");
-    for (let i = 0; i < noAnimation_Path.length; i++) {
-        noAnimation_Path[i].parentElement.removeChild(noAnimation_Path[i]);
+        for (let i = 0; i < highLightEls.length; i++) {
+            highLightEls[i].removeAttribute("class");
+            i--;
+        }
+        let pin_logo = document.getElementById("pin-logo");
+        pin_logo.parentElement.removeChild(pin_logo);
     }
-    for (let i = 0; i < animated_Path.length; i++) {
-        animated_Path[i].parentElement.removeChild(animated_Path[i]);
-    }
-    let highLightEls = document.getElementsByClassName("highlight-circle");
-
-    for (let i = 0; i < highLightEls.length; i++) {
-        highLightEls[i].removeAttribute("class");
-        i--;
-
-    }
-
-    // let first_vertex = document.getElementById(idVertex1);
-    // first_vertex.removeAttribute("class");
-    // let final_vertex = document.getElementById(idVertex2);
-    // final_vertex.removeAttribute("class");
-    let pin_logo = document.getElementById("pin-logo");
-    pin_logo.parentElement.removeChild(pin_logo);
-
 }
 export {
     If, drawEdge, handleSaveRelationship,

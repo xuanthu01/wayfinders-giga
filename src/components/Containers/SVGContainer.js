@@ -55,7 +55,7 @@ function SVGContainer(props) {
     const addMenuForMap = (floorId) => {
         let divMenuOfMap = document.createElement("div");
         divMenuOfMap.setAttribute("class", "menuOfMap");
-        document.getElementsByClassName("App")[0].parentElement.appendChild(divMenuOfMap);
+        document.getElementsByClassName("wayfinders-app")[0].parentElement.appendChild(divMenuOfMap);
         let radio = document.createElement("input");
         radio.setAttribute("type", "radio");
         radio.setAttribute("name", "radioGroup");
@@ -147,7 +147,7 @@ function SVGContainer(props) {
         //remove HTMLElement
         // document.getElementById("list-svg").removeChild(document.getElementById(`svg-${floorId}`));
         let radioElement = document.getElementById(`radio-${floorId}`);
-        document.getElementsByClassName("App")[0].removeChild(radioElement.parentElement);
+        document.getElementsByClassName("wayfinders-app")[0].removeChild(radioElement.parentElement);
         let deleteFileIndex;
         for (let i = 0; i < listIDMap.length; i++) {
             if (listIDMap[i] === floorId) {
@@ -171,13 +171,13 @@ function SVGContainer(props) {
         nodes.forEach(node => {
             node.addEventListener("mouseover", e => {
                 if (!e.target.id.includes("PATH")) {
-                    this.showNodeInfo(e.target);
+                    showNodeInfo(e.target);
                     highLightNodeEl(e.target.id, 500, false);
                 }
             });
             node.addEventListener("mouseout", e => {
                 if (!e.target.id.includes("PATH"))
-                    this.hideNodeInfo(e.target);
+                    hideNodeInfo(e.target);
             });
         });
     }
@@ -189,7 +189,7 @@ function SVGContainer(props) {
             return;
         }
         if (isLoading === false) {
-            for (let i = 0; i < listSVGArrayState.length; i++) {
+            for (let i = 0; i < listSVGArray.length; i++) {
                 let floorId = listsvg[i].getElementById("background").parentElement.attributes.id.value;
                 let nodes = listsvg[i].getElementById("node");
                 if (nodes) {
@@ -200,7 +200,7 @@ function SVGContainer(props) {
             }
             return;
         }
-        for (let i = index - numDeleted; i < listSVGArrayState.length; i++) {
+        for (let i = index - numDeleted; i < listSVGArray.length; i++) {
             let floorId = listsvg[i].getElementById("background").parentElement.attributes.id.value;
             listsvg[i].setAttribute("id", `svg-${floorId}`);
             // this.addClickEventForCirclesYAH(floorId);
@@ -227,7 +227,7 @@ function SVGContainer(props) {
                 <SVGContext.Consumer>
                     {() => (
                         <div id="list-svg">
-                            {listSVGArray.length > 0 ? listSVGArrayState.map((value, i) => (
+                            {listSVGArray.length > 0 ? listSVGArray.map((value, i) => (
                                 <ReactSVG
                                     key={`svg-${i}`}
                                     src={value}

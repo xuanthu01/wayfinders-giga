@@ -1,7 +1,9 @@
 "use strict";
 import React, { Component, useContext } from 'react';
+import { has, isEmpty } from 'lodash';
 import Graph from 'node-dijkstra';
-import { serializeGraphsToData } from '../helpers';
+import { serializeGraphsToData, addVertexToGraphs, removeVertexFromGraphs } from '../helpers';
+import { deserializeDataToGraphs } from '../shared';
 export const AppContext = React.createContext();
 export default class AppProvider extends Component {
     state = {
@@ -24,13 +26,24 @@ export default class AppProvider extends Component {
         reader.readAsText(e.target.files[0]);
     };
     handleGraphsChange = graphs => {
-        const data = serializeGraphsToData(graphs);
+        const data = serializeGraphsToData(graphs);       
         return this.setState({ graphs: graphs, route: new Graph({ ...graphs }), data: data });
     };
-    // handleVertexChange = (vertex1, vertex2) => {
-    //     return this.setState({ vertex1: vertex1, vertex2: vertex2 });
-    // };
+    handleDataChange = data => {
+        const graphs = deserializeDataToGraphs(data);
+        return this.handleGraphsChange(graphs);
+    }
+    removeRelationship = (nodeId, neighborId) => {
+        return removeVertexFromGraphs(nodeId, neighborId, this.state.graphs, this.handleGraphsChange);
+    };
+    addVertexToGraphs = (vertex1, vertex2) => {
+        return addVertexToGraphs(vertex1, vertex2, this.state.graphs, this.handleGraphsChange);
+    };
+
+
     setVertex = (vertex) => {
+        console.log("setVertex", vertex);
+
         return this.setState({ ...vertex });
     }
     setFeature = feature => {
@@ -41,18 +54,20 @@ export default class AppProvider extends Component {
     };
     setShortestPath = (path) => {
         return this.setState({ shortestPath: path });
-    }
+    };
     render() {
         return (
             <AppContext.Provider value={{
                 ...this.state,
                 handleGraphsFileUpload: this.handleGraphsFileUpload,
                 handleGraphsChange: this.handleGraphsChange,
-                // handleVertexChange: this.handleVertexChange,
                 setFeature: this.setFeature,
                 setDrawedEdge: this.setDrawedEdge,
                 setShortestPath: this.setShortestPath,
                 setVertex: this.setVertex,
+                removeRelationship: this.removeRelationship,
+                handleDataChange: this.handleDataChange,
+                addVertexToGraphs: this.addVertexToGraphs
             }}>
                 {this.props.children}
             </AppContext.Provider>
