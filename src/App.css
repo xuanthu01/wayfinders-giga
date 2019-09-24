@@ -1,11 +1,13 @@
 .App {
   text-align: center;
+  overflow: auto;
+  
 }
 
-.App-logo {
-  height: 40vmin;
-}
-
+/* #menu{
+  position:fixed;
+  left:50%;
+} */
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -18,5 +20,101 @@
 }
 
 .App-link {
-  color: #09d3ac;
+  color: #61dafb;
 }
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+line {
+  animation: dash 50s linear;
+}
+@keyframes dash {
+  to {
+    stroke-dashoffset: 1000;
+  }
+}
+
+
+.animation-path {
+
+  stroke:red;
+  stroke-dasharray: 1300;
+  stroke-dashoffset: 1300;
+  animation: dash 7s linear forwards;
+  animation-iteration-count: infinite;
+}
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.highlight-circle{
+  stroke :red;
+  stroke-width: 2px;
+}
+
+#list-svg{
+  overflow: auto;
+  white-space: nowrap;
+}
+.menuOfMap{
+  display: inline;
+  
+}
+/* .tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+  }
+  
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -60px;
+  }
+  
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+  }
+  
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  } */
+
+
+  .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -60px;
+  }
