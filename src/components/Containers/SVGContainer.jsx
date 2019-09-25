@@ -22,24 +22,22 @@ function setAsync(state, action) {
     });
 }
 function SVGContainer(props) {
-    const [listSVGArrayState, setListSVGArrayState] = useState([]);
     const [numDeleted, setNumDeleted] = useState(0);
     const [listIDMap, setListIDMap] = useState("");
-    const [clickVertex1, setClickVertex1] = useState("");
-    const [clickVertex2, setClickVertex2] = useState("");
 
     const AppCtx = useContext(AppContext);
     const SVGCtx = useContext(SVGContext);
-    const { feature, vertex1, vertex2, setVertex, route, setShortestPath } = AppCtx;
+    const { feature, vertex1, vertex2, setVertex, route, setShortestPath, addVertexToGraphs, removeRelationship } = AppCtx;
     const { isLoading, listSVGArray, startIndex, AdjustNumberOfMap } = SVGCtx;
-
+    // setFeatureState(feature);
+    console.log("feature global", feature);
     let isDrawingEdge = false;
     let isFindingPath = false;
 
 
     const addClickEventForCirclesYAH = (YAHNode, floorId) => {
-        YAHNode.addEventListener("click", e => {
-            handleMouseClick(e, floorId);
+        YAHNode.addEventListener("click", async e => {
+            await handleMouseClick(e, floorId);
         });
         YAHNode.setAttribute("style", "cursor: pointer;");
     };
@@ -47,8 +45,8 @@ function SVGContainer(props) {
         let svg = document.getElementById(`node-${floorId}`);
         const vertices = svg.getElementsByTagName("circle");
         for (let i = 0; i < vertices.length; i++) {
-            vertices[i].addEventListener("click", e => {
-                handleMouseClick(e, floorId);
+            vertices[i].addEventListener("click", async e => {
+                await handleMouseClick(e, floorId);
             });
         }
     };
@@ -90,18 +88,37 @@ function SVGContainer(props) {
         nodes.replaceWith(node_pathline_clone);
         node_pathline.replaceWith(nodes_clone);
     };
-    const handleMouseClick = (e, floorId) => {
+    const deleteEgdes = async (edge, vertex1Id, vertex2Id) => {
+        if (feature === "delete" && typeof edge !== "string") {
+            edge.parentElement.removeChild(edge);
+        }
+        else if (typeof edge === "string") {
+            const edgeId = edge;
+            let edgeEl = document.getElementById(edgeId);
+            if (!edgeEl) {
+                const tryEdgeId = edgeId.split(':').reverse().join(':');
+                edgeEl = document.getElementById(tryEdgeId);
+            }
+            edgeEl.parentElement.removeChild(edgeEl);
+        }
+        await removeRelationship(vertex1Id, vertex2Id);
+    };
+    const handleMouseClick = async (e, floorId) => {
         const clickTarget = e.target;
+        console.log(AppCtx);
+        
+        console.log("feature:", feature);
         if (feature === "draw") {
+            console.log("clickTarget in draw feature", clickTarget);
+
             if (clickTarget.nodeName === "circle") {
                 if (!isDrawingEdge) {
-                    setClickVertex1(clickTarget);
+                    setVertex({ vertex1: clickTarget });
                     isDrawingEdge = true;
-                } else if (clickTarget !== clickVertex1) {
-                    setClickVertex2(clickTarget);
-                    // drawEdge(clickVertex1, clickVertex2, floorId, DeleteEgde, addVertexToGraphs);
-                    setClickVertex1(null);
-                    setClickVertex2(null);
+                } else if (clickTarget !== vertex1) {
+                    setVertex({ vertex2: clickTarget });
+                    await drawEdge(vertex1, vertex2, floorId, deleteEgdes, addVertexToGraphs);
+                    setVertex({ vertex1: null, vertex2: null });
                     isDrawingEdge = false;
                 }
             }
@@ -231,7 +248,7 @@ function SVGContainer(props) {
                                 <ReactSVG
                                     key={`svg-${i}`}
                                     src={value}
-                                    onLoad={(src, hasCache) => handleSVG(src, hasCache)}
+                                    onLoad={async (src, hasCache) => await handleSVG(src, hasCache)}
                                     preProcessor={code => code}
                                     cacheRequests={false}
                                 />
