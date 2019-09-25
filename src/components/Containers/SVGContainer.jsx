@@ -21,16 +21,24 @@ function setAsync(state, action) {
         action(state);
     });
 }
+function setStateAsync(state) {
+    return new Promise((resolve) => {
+        this.setState(state, resolve)
+    });
+}
 function SVGContainer(props) {
+    // console.log("SVGContainer")
+    // const [listSVGArrayState, setListSVGArrayState] = useState([]);
     const [numDeleted, setNumDeleted] = useState(0);
-    const [listIDMap, setListIDMap] = useState("");
+    const [listIDMap, setListIDMap] = useState([]);
+    const [clickVertex1, setClickVertex1] = useState("");
+    const [clickVertex2, setClickVertex2] = useState("");
 
     const AppCtx = useContext(AppContext);
     const SVGCtx = useContext(SVGContext);
     const { feature, vertex1, vertex2, setVertex, route, setShortestPath, addVertexToGraphs, removeRelationship } = AppCtx;
     const { isLoading, listSVGArray, startIndex, AdjustNumberOfMap } = SVGCtx;
-    // setFeatureState(feature);
-    console.log("feature global", feature);
+    console.log(listSVGArray)
     let isDrawingEdge = false;
     let isFindingPath = false;
 
@@ -53,7 +61,7 @@ function SVGContainer(props) {
     const addMenuForMap = (floorId) => {
         let divMenuOfMap = document.createElement("div");
         divMenuOfMap.setAttribute("class", "menuOfMap");
-        document.getElementsByClassName("wayfinders-app")[0].parentElement.appendChild(divMenuOfMap);
+        document.getElementsByClassName("menu-button")[0].appendChild(divMenuOfMap);
         let radio = document.createElement("input");
         radio.setAttribute("type", "radio");
         radio.setAttribute("name", "radioGroup");
@@ -164,7 +172,7 @@ function SVGContainer(props) {
         //remove HTMLElement
         // document.getElementById("list-svg").removeChild(document.getElementById(`svg-${floorId}`));
         let radioElement = document.getElementById(`radio-${floorId}`);
-        document.getElementsByClassName("wayfinders-app")[0].removeChild(radioElement.parentElement);
+        document.getElementsByClassName("menu-button")[0].removeChild(radioElement.parentElement);
         let deleteFileIndex;
         for (let i = 0; i < listIDMap.length; i++) {
             if (listIDMap[i] === floorId) {
@@ -199,6 +207,7 @@ function SVGContainer(props) {
         });
     }
     const handleSVG = async (src, hasCache) => {
+       console.log(listSVGArray.length)
         let index = startIndex;
         let listsvg = document.getElementsByTagName("svg");
         let notFinishLoad = listsvg.length < listSVGArray.length;
@@ -218,6 +227,7 @@ function SVGContainer(props) {
             return;
         }
         for (let i = index - numDeleted; i < listSVGArray.length; i++) {
+            console.log(i)
             let floorId = listsvg[i].getElementById("background").parentElement.attributes.id.value;
             listsvg[i].setAttribute("id", `svg-${floorId}`);
             // this.addClickEventForCirclesYAH(floorId);
@@ -225,9 +235,9 @@ function SVGContainer(props) {
             addClickEventForCircle(floorId);
             addEventMouse();
             addMenuForMap(floorId);
-            // await this.setStateAsync({ listIdOfMap: [...this.state.listIdOfMap, floorId] });
+            setListIDMap([...listIDMap,floorId]);
             // await setListIDMapAsync([...listIDMap, floorId]);
-            await setAsync([...listIDMap, floorId], setListIDMap);
+            // await setStateAsync([...listIDMap, floorId], setListIDMap);
         };
         //add event listener for YAH nodes 
         const circlesYAH = document.querySelectorAll("circle[id*='YAH']");
@@ -242,7 +252,8 @@ function SVGContainer(props) {
         <AppContext.Consumer>
             {() => (
                 <SVGContext.Consumer>
-                    {() => (
+                    {() =>
+                         (
                         <div id="list-svg">
                             {listSVGArray.length > 0 ? listSVGArray.map((value, i) => (
                                 <ReactSVG

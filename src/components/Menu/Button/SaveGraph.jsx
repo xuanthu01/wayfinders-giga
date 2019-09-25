@@ -6,9 +6,9 @@ export default function SaveGraphButton() {
     return (
         <AppContext.Consumer>
             {() => (
-                <div>
+                <>
                     <button onClick={() => handleSaveRelationship(graphs, "graphs")}>Save Graphs</button><br />
-                </div>
+                </>
             )}
         </AppContext.Consumer>
     )
