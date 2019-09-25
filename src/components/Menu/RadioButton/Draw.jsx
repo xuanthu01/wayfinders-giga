@@ -8,7 +8,7 @@ export default function DrawRadioButton(props) {
         addVertexToGraphs
     } = useContext(AppContext);
 
-    const deleteEgdes =  (edge, vertex1Id, vertex2Id) => {
+    const deleteEgdes = async  (edge, vertex1Id, vertex2Id) => {
         if (feature === "delete" && typeof edge !== "string") {
             edge.parentElement.removeChild(edge);
         }
@@ -21,7 +21,7 @@ export default function DrawRadioButton(props) {
             }
             edgeEl.parentElement.removeChild(edgeEl);
         }
-         removeRelationship(vertex1Id, vertex2Id);
+         await removeRelationship(vertex1Id, vertex2Id);
     };
     const drawEdgeFromGraphs =  () => {
         try {

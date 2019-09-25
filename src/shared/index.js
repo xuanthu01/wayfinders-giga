@@ -8,25 +8,31 @@ const If = ({ component: Component, condition, props }) => {
 /**
  * 
  * @param {Array} data data có cấu trúc như data của RelationshipTable
- * @returns {{}} Object graphs
+ * @returns {Promise<Object>} Object graphs
  * @description chuẩn hóa data sang graphs cho input của lib node-dijkstra
  */
-const deserializeDataToGraphs = (data) => {
-    let graphs = {};
-    data.forEach(items => {
-        const arrayNeighbor = items.neighbors.map(neighbor => {
-            return [[neighbor.id], neighbor.cost]
-        });
-        const nb = arrayNeighbor.reduce((prev, curr) => { prev[curr[0]] = curr[1]; return prev; }, {})
-        const item = {
-            [items.node.id]: {
-                ...nb
-            }
-        };
-        graphs = { ...graphs, ...item }
+const deserializeDataToGraphs = async (data) => {
+    return new Promise((resolve, reject) => {
+        try {
+            let graphs = {};
+            data.forEach(items => {
+                const arrayNeighbor = items.neighbors.map(neighbor => {
+                    return [[neighbor.id], neighbor.cost]
+                });
+                const nb = arrayNeighbor.reduce((prev, curr) => { prev[curr[0]] = curr[1]; return prev; }, {})
+                const item = {
+                    [items.node.id]: {
+                        ...nb
+                    }
+                };
+                graphs = { ...graphs, ...item }
+            });
+            // console.log('result save : ', graphs);
+            resolve(graphs);
+        } catch (error) {
+            reject(error);
+        }
     });
-    // console.log('result save : ', graphs);
-    return graphs;
 }
 /**
  * 
@@ -57,7 +63,7 @@ const handleSaveRelationship = (data, type) => {
  * @param {function} DeleteEgde
  * @param {function} addVertexToGraphs
  */
-const drawEdge = (vertex1, vertex2, floorId, DeleteEgde, addVertexToGraphs) => {
+const drawEdge = async (vertex1, vertex2, floorId, DeleteEgde, addVertexToGraphs) => {
     const node_path = document.getElementById(`node-pathline-${floorId}`);
     const draw = (v1, v2) => {
         const x1 = v1.getAttributeNS(null, "cx");
@@ -75,8 +81,8 @@ const drawEdge = (vertex1, vertex2, floorId, DeleteEgde, addVertexToGraphs) => {
         edge.setAttributeNS(null, "fill", "none");
         edge.setAttributeNS(null, "stroke-dasharray", "5,5");
         edge.setAttributeNS(null, "style", "cursor: pointer;");
-        edge.addEventListener("click", () => {
-            DeleteEgde(edge, v1.id, v2.id);
+        edge.addEventListener("click", async () => {
+            await DeleteEgde(edge, v1.id, v2.id);
         });
         node_path.appendChild(edge);
     }
@@ -88,7 +94,7 @@ const drawEdge = (vertex1, vertex2, floorId, DeleteEgde, addVertexToGraphs) => {
         return;
     }
     if (typeof vertex1 !== "string") {
-        const edgeExisted = addVertexToGraphs(vertex1, vertex2);
+        const edgeExisted = await addVertexToGraphs(vertex1, vertex2);
         edgeExisted ? alert('edge already existed') : draw(vertex1, vertex2);
     }
     else {

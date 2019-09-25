@@ -16,28 +16,33 @@ export default class AppProvider extends Component {
         isDrawedEdges: false,
         shortestPath: []
     };
+    setStateAsync = state => {
+        return new Promise((resolve) => {
+            this.setState(state, resolve)
+        });
+    };
     handleGraphsFileUpload = e => {
         const reader = new FileReader();
         reader.onload = async e => {
             const graphsStr = await e.target.result;
             const graphsJson = JSON.parse(graphsStr);
-            this.handleGraphsChange(graphsJson);
+            await this.handleGraphsChange(graphsJson);
         };
         reader.readAsText(e.target.files[0]);
     };
-    handleGraphsChange = graphs => {
-        const data = serializeGraphsToData(graphs);       
-        return this.setState({ graphs: graphs, route: new Graph({ ...graphs }), data: data });
+    handleGraphsChange = async graphs => {
+        const data = await serializeGraphsToData(graphs);
+        return await this.setStateAsync({ graphs: graphs, route: new Graph({ ...graphs }), data: data });
     };
-    handleDataChange = data => {
-        const graphs = deserializeDataToGraphs(data);
-        return this.handleGraphsChange(graphs);
+    handleDataChange = async data => {
+        const graphs = await deserializeDataToGraphs(data);
+        return await this.handleGraphsChange(graphs);
     }
-    removeRelationship = (nodeId, neighborId) => {
-        return removeVertexFromGraphs(nodeId, neighborId, this.state.graphs, this.handleGraphsChange);
+    removeRelationship = async (nodeId, neighborId) => {
+        return await removeVertexFromGraphs(nodeId, neighborId, this.state.graphs, this.handleGraphsChange);
     };
-    addVertexToGraphs = (vertex1, vertex2) => {
-        return addVertexToGraphs(vertex1, vertex2, this.state.graphs, this.handleGraphsChange);
+    addVertexToGraphs = async (vertex1, vertex2) => {
+        return await addVertexToGraphs(vertex1, vertex2, this.state.graphs, this.handleGraphsChange);
     };
 
 

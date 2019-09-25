@@ -7,7 +7,7 @@ import _ from 'lodash';
  * @param {function} onChangeGraphs function thay đổi state cho hàm gọi
  * @returns edgeExisted : cạnh đã tồn tại giữa 2 đỉnh chưa?
  */
-function addVertexToGraphs(vertex1, vertex2, graphs, onChangeGraphs) {
+async function addVertexToGraphs(vertex1, vertex2, graphs, onChangeGraphs) {
     const x1 = vertex1.getAttributeNS(null, "cx");
     const y1 = vertex1.getAttributeNS(null, "cy");
     const x2 = vertex2.getAttributeNS(null, "cx");
@@ -29,7 +29,7 @@ function addVertexToGraphs(vertex1, vertex2, graphs, onChangeGraphs) {
             graphs[idVertex2] = { ...graphs[idVertex2], [idVertex1]: cost };
             graphs[idVertex1] = { ...graphs[idVertex1], [idVertex2]: cost };
             // this.setState({ graphs });//
-            onChangeGraphs({ ...graphs });
+            await onChangeGraphs({ ...graphs });
         } else if (!graphs[idVertex2]) {
             // console.log("ton tai v1 va ko ton tai v2");
             graphs[idVertex1] = { ...graphs[idVertex1], [idVertex2]: cost };
@@ -39,7 +39,7 @@ function addVertexToGraphs(vertex1, vertex2, graphs, onChangeGraphs) {
                 }
             };
             // this.setState({ graphs: { ...graphs, ...graph } });//
-            onChangeGraphs({ ...graphs, ...graph });
+            await onChangeGraphs({ ...graphs, ...graph });
         } else {
             graphs[idVertex1] = { ...graphs[idVertex1], [idVertex2]: cost };
             const graph = {
@@ -50,7 +50,7 @@ function addVertexToGraphs(vertex1, vertex2, graphs, onChangeGraphs) {
                     [idVertex2]: cost
                 }
             };
-            onChangeGraphs({ ...graphs, ...graph });
+            await onChangeGraphs({ ...graphs, ...graph });
             // this.setState({ graphs: { ...graphs, ...graph } });
         }
         return edgeExisted;
@@ -66,7 +66,7 @@ function addVertexToGraphs(vertex1, vertex2, graphs, onChangeGraphs) {
                 }
             };
             // this.setState({ graphs: { ...graphs, ...graph } });
-            onChangeGraphs({ ...graphs, ...graph });
+            await onChangeGraphs({ ...graphs, ...graph });
         } else {
             //ca 2 cung chua co
             // console.log("ca 2 cung chua co");
@@ -79,7 +79,7 @@ function addVertexToGraphs(vertex1, vertex2, graphs, onChangeGraphs) {
                 }
             };
             // this.setState({ graphs: { ...graphs, ...graph } });//
-            onChangeGraphs({ ...graphs, ...graph });
+            await onChangeGraphs({ ...graphs, ...graph });
         }
     }
     return edgeExisted;
@@ -91,7 +91,7 @@ function addVertexToGraphs(vertex1, vertex2, graphs, onChangeGraphs) {
  * @param {{}} graphs graphs input cho node-dijkstra
  * @param {function} onChangeGraphs function thay đổi state cho hàm gọi
  */
-function removeVertexFromGraphs(v1, v2, graphs, onChangeGraphs) {
+async function removeVertexFromGraphs(v1, v2, graphs, onChangeGraphs) {
     if (_.has(graphs, [v1, v2]) && _.has(graphs, [v2, v1])) {
         delete graphs[v1][v2];
         delete graphs[v2][v1];
@@ -101,7 +101,7 @@ function removeVertexFromGraphs(v1, v2, graphs, onChangeGraphs) {
         if (_.isEmpty(graphs[v2])) {
             delete graphs[v2];
         }
-        onChangeGraphs(graphs);
+        await onChangeGraphs(graphs);
     }
 }
 /**

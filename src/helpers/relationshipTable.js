@@ -42,19 +42,27 @@ function transformNeighborsOfNode(object) {
     })
 }
 const serializeGraphsToData = (graphs) => {
-    const graphsArray = Object.keys(graphs).map(node => {
-        const type = getTypeOfNode(node);
-        const neighbors = transformNeighborsOfNode(graphs[node]);
-        const relation = {
-            node: {
-                id: node,
-                type: type,
-                name: type === 'path' || type === 'facility' ? node : getNameOfNode(node)
-            },
-            neighbors: neighbors
+    return new Promise((resolve, reject) => {
+        try {
+            const graphsArray = Object.keys(graphs).map(node => {
+                const type = getTypeOfNode(node);
+                const neighbors = transformNeighborsOfNode(graphs[node]);
+                const relation = {
+                    node: {
+                        id: node,
+                        type: type,
+                        name: type === 'path' || type === 'facility' ? node : getNameOfNode(node)
+                    },
+                    neighbors: neighbors
+                }
+                return relation;
+            });
+            resolve(graphsArray);
         }
-        return relation;
-    });
-    return graphsArray;
+        catch (err) {
+            reject(err);
+        }
+        // return graphsArray;
+    })
 }
 export { serializeGraphsToData }
