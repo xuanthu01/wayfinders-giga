@@ -8,7 +8,7 @@ export default function DrawRadioButton(props) {
         addVertexToGraphs
     } = useContext(AppContext);
 
-    const deleteEgdes = async  (edge, vertex1Id, vertex2Id) => {
+    const deleteEgdes = async (edge, vertex1Id, vertex2Id) => {
         if (feature === "delete" && typeof edge !== "string") {
             edge.parentElement.removeChild(edge);
         }
@@ -21,22 +21,22 @@ export default function DrawRadioButton(props) {
             }
             edgeEl.parentElement.removeChild(edgeEl);
         }
-         await removeRelationship(vertex1Id, vertex2Id);
+        await removeRelationship(vertex1Id, vertex2Id);
     };
-    const drawEdgeFromGraphs =  () => {
+    const drawEdgeFromGraphs = () => {
         try {
             if (isDrawedEdges) return;
             const array = [];
-            Object.keys(graphs).forEach( nodeId => {
-                 Object.keys(graphs[nodeId]).forEach(  nodeNeighborId => {
+            Object.keys(graphs).forEach(nodeId => {
+                Object.keys(graphs[nodeId]).forEach(nodeNeighborId => {
                     if (_.findIndex(array, { 'node': nodeNeighborId, 'neighbor': nodeId }) === -1) {
-                         array.push({ 'node': nodeId, 'neighbor': nodeNeighborId });
+                        array.push({ 'node': nodeId, 'neighbor': nodeNeighborId });
                     }
                 });
             });
-            array.forEach( item => {
+            array.forEach(item => {
                 if (item.node.substring(0, 2) === item.neighbor.substring(0, 2))
-                     drawEdge(item.node, item.neighbor, item.node.substring(0, 2), deleteEgdes, addVertexToGraphs);
+                    drawEdge(item.node, item.neighbor, item.node.substring(0, 2), deleteEgdes, addVertexToGraphs);
             });
             const line = document.querySelector("[id*='node-pathline']");
             if (graphs !== {} && line && line.childNodes.length > 0)
@@ -50,11 +50,11 @@ export default function DrawRadioButton(props) {
         <AppContext.Consumer>
             {({ setFeature, vertex1, vertex2 }) => (
                 <>
-                    <input type="radio" id="draw" onChange={ () => {
-                         removeShortestPathEl(vertex1, vertex2);
+                    <input type="radio" id="draw" onChange={() => {
+                        removeShortestPathEl(vertex1, vertex2);
                         setFeature("draw");
                         showNodes();
-                         drawEdgeFromGraphs();
+                        drawEdgeFromGraphs();
                     }} name="chooseFeature" />DRAW <br />
                 </>
             )}
