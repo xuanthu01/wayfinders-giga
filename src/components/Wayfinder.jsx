@@ -14,23 +14,22 @@ class Wayfinders extends Component {
             <AppProvider>
                 <div className="wayfinders-app">
                     <div className="menu-button" style={{ textAlign: "center" }}>
+                        <SVGProvider>                    
+                            <SVGContainer /> 
+                            <LoadSVGButton />
+                        </SVGProvider>
                         <LoadGraphButton />
                         <SaveGraphButton />
                         <DrawRadioButton />
                         <DeleteRadioButton />
                         <WayFindRadioButton />
                     </div>
-                    <div className="svg-zone" style={{ textAlign: "center" }}>
-                        <SVGProvider>
-                            <LoadSVGButton />
-                            <div className="svg-container" style={{ textAlign: "center" }}>
-                                <SVGContainer />
-                            </div>
-                        </SVGProvider>
-                    </div>
-                    <div className="relationship-table">
-                        <RelationshipTable />
-                    </div>
+                    {/* <div className="relationship-table">
+                        <If
+                            condition={true}
+                            component={RelationshipTable}
+                        />
+                    </div> */}
                 </div>
             </AppProvider>
         )
