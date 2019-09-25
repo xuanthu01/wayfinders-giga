@@ -27,28 +27,15 @@ function setStateAsync(state) {
     });
 }
 function SVGContainer(props) {
-<<<<<<< HEAD:src/components/Containers/SVGContainer.jsx
     const [numDeleted, setNumDeleted] = useState(0);
     const [listIDMap, setListIDMap] = useState("");
-=======
-    // console.log("SVGContainer")
-    // const [listSVGArrayState, setListSVGArrayState] = useState([]);
-    const [numDeleted, setNumDeleted] = useState(0);
-    const [listIDMap, setListIDMap] = useState([]);
-    const [clickVertex1, setClickVertex1] = useState("");
-    const [clickVertex2, setClickVertex2] = useState("");
->>>>>>> origin/master:src/components/Containers/SVGContainer.js
 
     const AppCtx = useContext(AppContext);
     const SVGCtx = useContext(SVGContext);
     const { feature, vertex1, vertex2, setVertex, route, setShortestPath, addVertexToGraphs, removeRelationship } = AppCtx;
     const { isLoading, listSVGArray, startIndex, AdjustNumberOfMap } = SVGCtx;
-<<<<<<< HEAD:src/components/Containers/SVGContainer.jsx
     // setFeatureState(feature);
     console.log("feature global", feature);
-=======
-    console.log(listSVGArray)
->>>>>>> origin/master:src/components/Containers/SVGContainer.js
     let isDrawingEdge = false;
     let isFindingPath = false;
 
@@ -71,11 +58,7 @@ function SVGContainer(props) {
     const addMenuForMap = (floorId) => {
         let divMenuOfMap = document.createElement("div");
         divMenuOfMap.setAttribute("class", "menuOfMap");
-<<<<<<< HEAD:src/components/Containers/SVGContainer.jsx
-        document.getElementsByClassName("wayfinders-app")[0].parentElement.appendChild(divMenuOfMap);
-=======
         document.getElementsByClassName("menu-button")[0].appendChild(divMenuOfMap);
->>>>>>> origin/master:src/components/Containers/SVGContainer.js
         let radio = document.createElement("input");
         radio.setAttribute("type", "radio");
         radio.setAttribute("name", "radioGroup");
@@ -186,11 +169,7 @@ function SVGContainer(props) {
         //remove HTMLElement
         // document.getElementById("list-svg").removeChild(document.getElementById(`svg-${floorId}`));
         let radioElement = document.getElementById(`radio-${floorId}`);
-<<<<<<< HEAD:src/components/Containers/SVGContainer.jsx
-        document.getElementsByClassName("wayfinders-app")[0].removeChild(radioElement.parentElement);
-=======
         document.getElementsByClassName("menu-button")[0].removeChild(radioElement.parentElement);
->>>>>>> origin/master:src/components/Containers/SVGContainer.js
         let deleteFileIndex;
         for (let i = 0; i < listIDMap.length; i++) {
             if (listIDMap[i] === floorId) {
@@ -245,10 +224,7 @@ function SVGContainer(props) {
             return;
         }
         for (let i = index - numDeleted; i < listSVGArray.length; i++) {
-<<<<<<< HEAD:src/components/Containers/SVGContainer.jsx
-=======
             console.log(i)
->>>>>>> origin/master:src/components/Containers/SVGContainer.js
             let floorId = listsvg[i].getElementById("background").parentElement.attributes.id.value;
             listsvg[i].setAttribute("id", `svg-${floorId}`);
             // this.addClickEventForCirclesYAH(floorId);
