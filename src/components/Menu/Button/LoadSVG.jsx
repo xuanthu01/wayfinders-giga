@@ -30,7 +30,7 @@ class LoadSVGButton extends Component {
             arrUrlSvg.push(files[i].preview.url);
         }
         setStartIndex(numberOfMap);
-        await getSVGContent(arrUrlSvg, startIndex);
+        await getSVGContent(arrUrlSvg);
         await this.setStateAsync({ numberOfMap: files.length });
         // this.props.onLoadFinish(arrUrlSvg, this.state.startIndex);
     }

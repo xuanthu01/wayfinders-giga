@@ -7,22 +7,26 @@ export class SVGProvider extends Component {
         isLoading: false,
         listSVGArray: []
     }
-    setStartIndex = index => {
-        return this.setState({ startIndex: index });
+    setStartIndex = async index => {
+        console.log(index,"setStartIndex");
+        return await this.setStateAsync({ startIndex: index });
     }
     setIsLoading = isLoading => {
         return this.setState({ isLoading: isLoading });
     }
-    getSVGContent = async (arrUrlSvg, startIndex) => {
-        console.log("getSvgContent");
-        this.setStartIndex(startIndex);
-        arrUrlSvg.forEach(async url => {
-            await this.setStateAsync({ listSVGArray: [...this.state.listSVGArray, url] });
-        });
+    getSVGContent = async (arrUrlSvg) => {
+        
+        // this.setStartIndex(startIndex);
+        // arrUrlSvg.forEach(async url => {         
+        //     await this.setStateAsync({ listSVGArray: [...this.state.listSVGArray, url] });
+        // });
+        for(let i=0;i<arrUrlSvg.length;i++) 
+            await this.setStateAsync({ listSVGArray: [...this.state.listSVGArray, arrUrlSvg[i]] });
         this.setIsLoading(true);
+        // console.log(this.state.listSVGArray,arrUrlSvg,"getSVGContent")
     }
     AdjustNumberOfMap = async (index) => {
-        const cloneState = [...this.state.listSvgArr];
+        const cloneState = [...this.state.listSVGArray];
         cloneState.splice(index, 1);
         this.setIsLoading(false);
         await this.setStateAsync({ listSVGArray: cloneState });

@@ -41,9 +41,9 @@ export default function DeleteRadioButton(props) {
     return (
         <AppContext.Consumer>
             {() => (
-                <div>
+                <>
                     <input type="radio" id="delete" onChange={() => { setFeature("delete"); drawEdgeFromGraphs(); }} name="chooseFeature" /> DELETE <br />
-                </div>
+                </>
             )}
         </AppContext.Consumer>
     )
