@@ -1,28 +1,20 @@
 import React, { useContext } from 'react'
-import { drawEdge, removeShortestPathEl } from '../../../shared';
+import { drawEdge, removeShortestPathEl, showNodes, removeEdgeElement } from '../../../shared';
 import _ from 'lodash';
 import { AppContext } from '../../../contexts/app.context';
 import { removeVertexFromGraphs } from '../../../helpers';
 export default function DeleteRadioButton(props) {
-    const { feature, setFeature, graphs, handleGraphsChange, isDrawedEdges, setDrawedEdge, removeRelationship } = useContext(AppContext);
-    const deleteEgdes =  (edge, vertex1Id, vertex2Id) => {
-        if (feature === "delete" && typeof edge !== "string") {
-            edge.parentElement.removeChild(edge);
-        }
-        else if (typeof edge === "string") {
-            const edgeId = edge;
-            let edgeEl = document.getElementById(edgeId);
-            if (!edgeEl) {
-                const tryEdgeId = edgeId.split(':').reverse().join(':');
-                edgeEl = document.getElementById(tryEdgeId);
-            }
-            edgeEl.parentElement.removeChild(edgeEl);
-        }
+    const { feature, setFeature, graphs, isDrawedEdges, setDrawedEdge, removeRelationship } = useContext(AppContext);
+
+    const deleteEgdes = async (edge, vertex1Id, vertex2Id) => {
+        removeEdgeElement(edge);
         // removeVertexFromGraphs(vertex1Id, vertex2Id, graphs, handleGraphsChange);
-         removeRelationship(vertex1Id, vertex2Id);
+        await removeRelationship(vertex1Id, vertex2Id);
     };
-    const drawEdgeFromGraphs =  () => {
+    const drawEdgeFromGraphs = (isDrawedEdges) => {
         if (isDrawedEdges) return;
+        console.log(isDrawedEdges);
+
         const array = [];
         Object.keys(graphs).forEach(nodeId => {
             Object.keys(graphs[nodeId]).forEach(nodeNeighborId => {
@@ -31,9 +23,9 @@ export default function DeleteRadioButton(props) {
                 }
             });
         });
-        array.forEach( item => {
+        array.forEach(async item => {
             if (item.node.substring(0, 2) === item.neighbor.substring(0, 2))
-                 drawEdge(item.node, item.neighbor, item.node.substring(0, 2), deleteEgdes);
+                await drawEdge(item.node, item.neighbor, item.node.substring(0, 2), deleteEgdes);
         });
         const line = document.querySelector("[id*='node-pathline']");
         if (graphs !== {} && line && line.childNodes.length > 0)
@@ -41,12 +33,13 @@ export default function DeleteRadioButton(props) {
     }
     return (
         <AppContext.Consumer>
-            {({ vertex1, vertex2 }) => (
+            {({ isDrawedEdges, vertex1, vertex2 }) => (
                 <div>
-                    <input type="radio" id="delete" onChange={ () => {
-                         removeShortestPathEl(vertex1, vertex2);
+                    <input type="radio" id="delete" onChange={() => {
+                        showNodes();
+                        removeShortestPathEl(vertex1, vertex2);
                         setFeature("delete");
-                         drawEdgeFromGraphs();
+                        drawEdgeFromGraphs(isDrawedEdges);
                     }} name="chooseFeature" /> DELETE <br />
                 </div>
             )}
