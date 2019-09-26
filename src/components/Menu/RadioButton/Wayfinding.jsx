@@ -6,11 +6,7 @@ import { AppContext } from '../../../contexts/app.context';
 
 
 const PathStep = ({ step, index }) => {
-    return (
-        <p id="node-pathline-list" style={{ whiteSpace: "nowrap", overflow: "auto", }}>
-            {`Step ${index} : ${step.join("=>").toString()}`}
-        </p>
-    )
+    return `Step ${index} : ${step[0].join("=>").toString()}`;
 }
 const VertextureComponent = (props) => {
     const { vertex1, vertex2, setVertex, route, shortestPath, setShortestPath } = useContext(AppContext);
@@ -76,12 +72,25 @@ const VertextureComponent = (props) => {
             }} />
             <span>  </span>
             <button onClick={_drawShorestPath}>Find</button> <br />
-            {
+            <div id="node-pathline-list" style={{ whiteSpace: "nowrap", overflow: "auto" }}>
+                {
+                    // props !== {} ? <p id="node-pathline-list" style={{ whiteSpace: "nowrap", overflow: "auto", }}>{result.join("=>")}</p> : null
+                    shortestPath !== {} ? result.map((step, index) => {
+                        return <>
+                            <p>
+                                <PathStep key={index} step={step} index={index + 1} />
+                            </p>
+                            <br />
+                        </>
+                    }) : null
+                }
+            </div>
+            {/* {
                 result.map((step, index) => {
                     return <><p>List of path</p>
                         <PathStep key={index} step={step} index={index + 1} /></>
                 })
-            }
+            } */}
         </div>)
 }
 class WayFindRadioButton extends React.Component {
