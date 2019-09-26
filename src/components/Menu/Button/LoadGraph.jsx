@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { AppContext } from '../../../contexts/app.context';
-import { GraphContext } from '../../../contexts/graph.context';
 export default function LoadGraphButton(props) {
     const { handleGraphsFileUpload } = useContext(AppContext);
     const handleLoadGraphsClick = async () => {

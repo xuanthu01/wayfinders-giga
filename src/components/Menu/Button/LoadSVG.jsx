@@ -11,9 +11,6 @@ class LoadSVGButton extends Component {
             numberOfMap: 0,
         }
     }
-    componentDidMount() {
-
-    }
     setStateAsync(state) {
         return new Promise((resolve) => {
             this.setState(state, resolve)
@@ -21,7 +18,7 @@ class LoadSVGButton extends Component {
     }
     onFilesChange = async (files) => {
         // let {numberOfMap,startIndex} = this.state;
-        const { startIndex, setStartIndex, getSVGContent } = this.context;
+        const { setStartIndex, getSVGContent } = this.context;
         console.log(this.context);
 
         const { numberOfMap } = this.state;
@@ -32,14 +29,11 @@ class LoadSVGButton extends Component {
         setStartIndex(numberOfMap);
         await getSVGContent(arrUrlSvg);
         await this.setStateAsync({ numberOfMap: files.length });
-        // this.props.onLoadFinish(arrUrlSvg, this.state.startIndex);
     }
-
     onFilesError = () => {
 
     }
     shouldComponentUpdate(nextState) {
-
         return false;
     }
     render() {
