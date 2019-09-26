@@ -58,6 +58,10 @@ class SVGContainer extends Component {
                 const floorId = circleNode.id.substring(0, 2);
                 this.addClickEventForCirclesYAH(circleNode, floorId);
             });
+            if(this.context.feature === "find")
+                showNodes(true);
+            // else if(this.context.feature === "draw")   
+                
         } catch (error) {
             console.log("handleSVG failed:", error);
         }
