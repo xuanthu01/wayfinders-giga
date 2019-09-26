@@ -236,7 +236,6 @@ class SVGContainer extends Component {
     scrollMap = (floorId) => {
         let svg = document.getElementById(`svg-${floorId}`);
         svg.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-
     }
     setStateAsync(state) {
         return new Promise((resolve) => {
@@ -244,7 +243,7 @@ class SVGContainer extends Component {
         });
     }
     shouldComponentUpdate(nextProps, nextState) {
-        return this.state.listSvgArrState !== nextState.listSvgArrState
+        return this.state.listSvgArrState !== nextState.listSvgArrState;
     }
     render() {
         console.log("SVGContainer");

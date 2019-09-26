@@ -62,7 +62,6 @@ const serializeGraphsToData = (graphs) => {
         catch (err) {
             reject(err);
         }
-        // return graphsArray;
     })
 }
 export { serializeGraphsToData }
