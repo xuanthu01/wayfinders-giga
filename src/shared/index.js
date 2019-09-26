@@ -104,26 +104,32 @@ const drawEdge = async (vertex1, vertex2, floorId, DeleteEgde, addVertexToGraphs
     }
 }
 async function removeEdgeElement(edge) {
-    return new Promise((resolve, reject)=>{
-        try {
-            if (typeof edge !== "string") {
-                resolve(edge.parentElement.removeChild(edge));
+    return new Promise((resolve, reject) => {
+        if (edge && typeof edge !== "string") {
+            try {
+                const result = edge.parentElement.removeChild(edge);
+                resolve(result);
+            } catch (error) {
+                console.log("error while remove edge element:", error);
+                reject(error);
             }
-            else {
-                const edgeId = edge;
-                let edgeEl = document.getElementById(edgeId);
-                if (!edgeEl) {
-                    const tryEdgeId = edgeId.split(':').reverse().join(':');
-                    edgeEl = document.getElementById(tryEdgeId);
-                }
-                resolve(edgeEl.parentElement.removeChild(edgeEl));
+        }
+        else {
+            const edgeId = edge;
+            let edgeEl = document.getElementById(edgeId);
+            if (!edgeEl) {
+                const tryEdgeId = edgeId.split(':').reverse().join(':');
+                edgeEl = document.getElementById(tryEdgeId);
             }
-        } catch (error) {
-            console.log("error while remove edge element");
-            reject(error);
+            try {
+                const result = edgeEl && edgeEl.parentElement.removeChild(edgeEl);
+                resolve(result);
+            } catch (error) {
+                console.log("error while remove edge with element id:", error);
+                reject(error);
+            }
         }
     })
-    
 }
 function setNodesStyle(nodes, type, mode) {
     const circles = nodes.getElementsByTagName("circle");
