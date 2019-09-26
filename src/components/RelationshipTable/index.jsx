@@ -20,34 +20,62 @@ function ButtonFeature({ handleEditRelationship, handleSaveRelationship }) {
 }
 class RelationshipTable extends React.Component {
     static contextType = AppContext;
-    handleRemoveNeighbor = (node, neighbor) => {
+    handleRemoveNeighbor = async (node, neighbor) => {
         try {
             const { data, graphs, removeRelationship } = this.context;
             console.log("data", data);
-            data.forEach(item => {
+            data.forEach(async item => {
                 //tìm node để xóa neighbor & tìm neighbor để xóa node 
                 if (item.node === node || item.node.id === neighbor.id) {
                     const nodeRemoved = remove(item.neighbors, nb => nb === neighbor || nb.id === node.id);
                     if (isEmpty(item.neighbors)) {
                         remove(data, nodeNoNeighbor => nodeNoNeighbor.node.id === item.node.id);
                     }
-                    if (!nodeRemoved[0]) {
-                        alert("Not found neighbor of node has id : " + node.id);
-                        return;
+                    if (nodeRemoved.length > 0) {
+                        //remove in graphs
+                        nodeRemoved.forEach(async removed => {
+                            await removeRelationship(node.id, removed.id);
+                        });
+                        //remove edges element
+                        try {
+                            await removeEdgeElement(`${node.id}:${nodeRemoved[0].id}`);
+                        } catch (error) {
+                            throw error;
+                        }
                     }
-                    //remove in graphs
-                    removeRelationship(node.id, nodeRemoved[0].id);
-                    //remove edges element
-                    removeEdgeElement(`${node.id}:${nodeRemoved[0].id}`);
                 }
+                //trash neighbor
+                const isExisting = item.node === node && item.neighbors.some(neighborTrash => {
+                    return neighborTrash.id === neighbor.id;
+                });
+                if (isExisting) {
+                    remove(item.neighbors, nb => nb.id === neighbor.id);
+                }
+                // if (item.node === node && item.neighbors.some(neighbor => )) {
+
+                // }
             });
+            await this.context.handleDataChange(data);
         } catch (error) {
             console.log("failed in handleRemoveNeighbor in RelationshipTable:", error);
         }
     };
-    handleAddRelationship = () => {
-        alert("This feature will be available in next version");
-    }
+    handleAddRelationship = (node) => {
+        console.log("handleAddRelationship: ", node);
+        const { data, handleDataChange } = this.context;
+        data.forEach(item => {
+            if (item.node === node) {
+                const newNeighbor = {
+                    id: 'new-neighbor-',
+                    name: 'new Neighbor ',
+                    type: 'path',
+                    cost: 1
+                }
+                item.neighbors.push(newNeighbor);;
+            }
+        });
+        handleDataChange(data);
+    };
     getColumns = () => {
         const { data, handleDataChange } = this.context;
         const columns = [
@@ -58,7 +86,7 @@ class RelationshipTable extends React.Component {
                 ...COLUMNS.Type
             },
             {
-                ...COLUMNS.Neighbors(data, handleDataChange)
+                ...COLUMNS.Neighbors(data, this.handleAddRelationship, handleDataChange)
             },
             {
                 ...COLUMNS.NeighborsType(data, handleDataChange)
