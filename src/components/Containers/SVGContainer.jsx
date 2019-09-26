@@ -3,7 +3,7 @@ import ReactSVG from 'react-inlinesvg';
 
 // import _ from 'lodash';
 import { drawShortestPath, } from "../../helpers";
-import { drawEdge, highLightNodeEl, removeShortestPathEl } from "../../shared"
+import { drawEdge, highLightNodeEl, removeShortestPathEl, showNodes } from "../../shared"
 import CombinedCtxProvider, { CombinedContext } from '../../contexts/combined.context';
 
 // import { isFulfilled } from 'q';
@@ -22,14 +22,17 @@ class SVGContainer extends Component {
 
     handleSVG = async (src, hasCache) => {
         try {
-            const { startIndex, isLoading, listSVGArray } = this.context;
+            const { startIndex, isLoading, listSVGArray} = this.context;
             let index = startIndex;
             let listsvg = document.getElementsByTagName("svg");
             let notFinishLoad = listsvg.length < listSVGArray.length;
             if (notFinishLoad === true) {
                 return;
             }
+            
+            
             if (isLoading === false) {
+                
                 for (let i = 0; i < listSVGArray.length; i++) {
                     let floorId = listsvg[i].getElementById("background").parentElement.attributes.id.value;
                     let nodes = listsvg[i].getElementById("node");
@@ -245,6 +248,7 @@ class SVGContainer extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         return this.state.listSvgArrState !== nextState.listSvgArrState;
     }
+    
     render() {
         console.log("SVGContainer");
         const { listSVGArray } = this.context;

@@ -157,11 +157,15 @@ function setNodesStyle(nodes, type, mode) {
 }
 const showNodes = (excludePath) => {
     //show nodes
+    
     const nodes = document.querySelectorAll("[id^='node-']");
+    // console.log(nodes);
     nodes.forEach(nodeFloor => {
+        
         const storeNodes = nodeFloor.querySelector("#store_node");
         const facilityNodes = nodeFloor.querySelector("#facility_node");
         const pathNodes = nodeFloor.querySelector("#path_node");
+        console.log(storeNodes && facilityNodes && pathNodes)
         if (storeNodes && facilityNodes && pathNodes) {
             setNodesStyle(storeNodes, "store", "show");
             setNodesStyle(facilityNodes, "facility", "show");
