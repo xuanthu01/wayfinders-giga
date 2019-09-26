@@ -30,8 +30,12 @@ export default class AppProvider extends Component {
         reader.readAsText(e.target.files[0]);
     };
     handleGraphsChange = async graphs => {
-        const data = await serializeGraphsToData(graphs);
-        return await this.setStateAsync({ graphs: graphs, route: new Graph({ ...graphs }), data: data });
+        try {
+            const data = await serializeGraphsToData(graphs);
+            return await this.setStateAsync({ graphs: graphs, route: new Graph({ ...graphs }), data: data });
+        } catch (error) {
+            console.log("handleGraphsChange failed:", error);
+        }
     };
     handleDataChange = async data => {
         const graphs = await deserializeDataToGraphs(data);
