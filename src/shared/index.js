@@ -11,7 +11,7 @@ const If = ({ component: Component, condition, props }) => {
  * @returns {Promise<Object>} Object graphs
  * @description chuẩn hóa data sang graphs cho input của lib node-dijkstra
  */
-const deserializeDataToGraphs = async (data) => {
+const deserializeDataToGraphs = (data) => {
     return new Promise((resolve, reject) => {
         try {
             let graphs = {};
@@ -27,7 +27,6 @@ const deserializeDataToGraphs = async (data) => {
                 };
                 graphs = { ...graphs, ...item }
             });
-            // console.log('result save : ', graphs);
             resolve(graphs);
         } catch (error) {
             reject(error);
@@ -103,6 +102,28 @@ const drawEdge = async (vertex1, vertex2, floorId, DeleteEgde, addVertexToGraphs
         if (vtx1 && vtx2)
             draw(vtx1, vtx2);
     }
+}
+async function removeEdgeElement(edge) {
+    return new Promise((resolve, reject)=>{
+        try {
+            if (typeof edge !== "string") {
+                resolve(edge.parentElement.removeChild(edge));
+            }
+            else {
+                const edgeId = edge;
+                let edgeEl = document.getElementById(edgeId);
+                if (!edgeEl) {
+                    const tryEdgeId = edgeId.split(':').reverse().join(':');
+                    edgeEl = document.getElementById(tryEdgeId);
+                }
+                resolve(edgeEl.parentElement.removeChild(edgeEl));
+            }
+        } catch (error) {
+            console.log("error while remove edge element");
+            reject(error);
+        }
+    })
+    
 }
 function setNodesStyle(nodes, type, mode) {
     const circles = nodes.getElementsByTagName("circle");
@@ -245,5 +266,5 @@ export {
     If, drawEdge, handleSaveRelationship,
     deserializeDataToGraphs, hideNodes, showNodes,
     showEdges, hideEdges, removeShortestPathEl,
-    highLightNodeEl
+    highLightNodeEl, removeEdgeElement
 }
