@@ -1,4 +1,3 @@
-"use strict";
 import React, { Component } from 'react';
 export const SVGContext = React.createContext();
 export class SVGProvider extends Component {
@@ -8,22 +7,19 @@ export class SVGProvider extends Component {
         listSVGArray: []
     }
     setStartIndex = async index => {
-        console.log(index,"setStartIndex");
+        console.log(index, "setStartIndex");
         return await this.setStateAsync({ startIndex: index });
     }
     setIsLoading = isLoading => {
         return this.setState({ isLoading: isLoading });
     }
-    getSVGContent = async (arrUrlSvg) => {
-        
-        // this.setStartIndex(startIndex);
-        // arrUrlSvg.forEach(async url => {         
-        //     await this.setStateAsync({ listSVGArray: [...this.state.listSVGArray, url] });
-        // });
-        for(let i=0;i<arrUrlSvg.length;i++) 
-            await this.setStateAsync({ listSVGArray: [...this.state.listSVGArray, arrUrlSvg[i]] });
+    /**
+     * @param {Array} SVGUrl
+     */
+    getSVGContent = async (SVGUrl) => {
+        for (let i = 0; i < SVGUrl.length; i++)
+            await this.setStateAsync({ listSVGArray: [...this.state.listSVGArray, SVGUrl[i]] });
         this.setIsLoading(true);
-        // console.log(this.state.listSVGArray,arrUrlSvg,"getSVGContent")
     }
     AdjustNumberOfMap = async (index) => {
         const cloneState = [...this.state.listSVGArray];

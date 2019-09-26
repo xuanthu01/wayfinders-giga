@@ -1,6 +1,4 @@
-"use strict";
-import React, { Component, useContext } from 'react';
-import { has, isEmpty } from 'lodash';
+import React, { Component } from 'react';
 import Graph from 'node-dijkstra';
 import { serializeGraphsToData, addVertexToGraphs, removeVertexFromGraphs } from '../helpers';
 import { deserializeDataToGraphs } from '../shared';
@@ -14,7 +12,8 @@ export default class AppProvider extends Component {
         feature: "",
         data: [],
         isDrawedEdges: false,
-        shortestPath: []
+        shortestPath: [],
+        startIndex: 0
     };
     setStateAsync = state => {
         return new Promise((resolve) => {
@@ -60,6 +59,9 @@ export default class AppProvider extends Component {
     setShortestPath = (path) => {
         return this.setState({ shortestPath: path });
     };
+    setStartIndex = (index) => {
+        return this.setState({ startIndex: index });
+    }
     render() {
         return (
             <AppContext.Provider value={{
@@ -72,7 +74,8 @@ export default class AppProvider extends Component {
                 setVertex: this.setVertex,
                 removeRelationship: this.removeRelationship,
                 handleDataChange: this.handleDataChange,
-                addVertexToGraphs: this.addVertexToGraphs
+                addVertexToGraphs: this.addVertexToGraphs,
+                setStartIndex: this.setStartIndex,
             }}>
                 {this.props.children}
             </AppContext.Provider>
