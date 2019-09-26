@@ -50,11 +50,11 @@ class CellEditable extends Component {
         const { data, node, neighbor, propertyToEdit, onChangeData } = this.props;
         return (
             <div>
-                <If
+                {/* <If
                     condition={propertyToEdit === "id"}
                     component={this.ButtonAddRelations}
                     props={{ data: data, onChangeData: onChangeData, node: node }}
-                />
+                /> */}
                 <CellEdit data={data} node={node} neighbor={neighbor} propertyToEdit={propertyToEdit} onChangeData={onChangeData} />
             </div>
         )

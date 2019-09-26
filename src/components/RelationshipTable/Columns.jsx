@@ -25,16 +25,18 @@ const Type = {
     filterMethod: (filter, rows) => matchSorter(rows, filter.value, { keys: ["node-type"] }),
     filterAll: true
 };
-const Neighbors = (data, onChangeData) => {
+const Neighbors = (data, handleButtonAdd, onChangeData) => {
     return {
         id: 'neighbors',
         Header: 'Neighbors',
         accessor: d => d.neighbors.map(neighbor => neighbor.id),
         Cell: props => {
             const { node, neighbors } = props.original;
-            return neighbors.map(neighbor => {
+            const neighborCell = neighbors.map(neighbor => {
                 return <CellEditable key={'neighbor-' + neighbor.id} data={data} node={node} neighbor={neighbor} propertyToEdit='id' onChangeData={onChangeData} />
-            })
+            });
+            neighborCell.push(<button style={{ float: 'right' }} onClick={() => handleButtonAdd(node, onChangeData)} >+</button>);
+            return neighborCell;
         },
         filterMethod: (filter, rows) =>
             matchSorter(rows, filter.value, { keys: ["neighbors"] }),
