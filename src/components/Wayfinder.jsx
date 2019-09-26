@@ -4,7 +4,6 @@ import { WayFindRadioButton, DrawRadioButton, DeleteRadioButton } from './Menu/R
 import { LoadSVGButton, LoadGraphButton, SaveGraphButton } from './Menu/Button';
 import RelationshipTable from './RelationshipTable';
 import SVGContainer from './Containers/SVGContainer';
-import { GraphProvider } from '../contexts/graph.context';
 import { SVGProvider } from '../contexts/svg.context';
 import { If } from '../shared';
 class Wayfinders extends Component {
@@ -27,6 +26,7 @@ class Wayfinders extends Component {
                                 <SVGContainer />
                             </div>
                         </SVGProvider>
+
                     </div>
                     <div className="relationship-table">
                         <RelationshipTable />
