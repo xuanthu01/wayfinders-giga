@@ -80,7 +80,7 @@ class SVGContainer extends Component {
             node.addEventListener("mouseover", e => {
                 if (!e.target.id.includes("PATH")) {
                     this.showNodeInfo(e.target);
-                    highLightNodeEl(e.target.id, 500, false);
+                    // highLightNodeEl(e.target.id, 500, false);
                 }
             });
             node.addEventListener("mouseout", e => {
@@ -113,7 +113,7 @@ class SVGContainer extends Component {
     addMenuForMap = (floorId) => {
         let divMenuOfMap = document.createElement("div");
         divMenuOfMap.setAttribute("class", "menuOfMap");
-        document.getElementsByClassName("menu-button")[0].parentElement.appendChild(divMenuOfMap);
+        document.getElementsByClassName("svg-container")[0].appendChild(divMenuOfMap);
         let radio = document.createElement("input");
         radio.setAttribute("type", "radio");
         radio.setAttribute("name", "radioGroup");
@@ -217,7 +217,7 @@ class SVGContainer extends Component {
     DeleteMap = (floorId) => {
         const { AdjustNumberOfMap } = this.context;
         let radioElement = document.getElementById(`radio-${floorId}`);
-        document.getElementsByClassName("menu-button")[0].parentElement.removeChild(radioElement.parentElement);
+        document.getElementsByClassName("svg-container")[0].removeChild(radioElement.parentElement);
         let deleteFileIndex;
         const { listIdOfMap } = this.state;
         for (let i = 0; i < listIdOfMap.length; i++) {

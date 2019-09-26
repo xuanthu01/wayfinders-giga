@@ -50,7 +50,7 @@ export default class AppProvider extends Component {
 
 
     setVertex = (vertex) => {
-        console.log("setVertex", vertex);
+        // console.log("setVertex", vertex);
 
         return this.setState({ ...vertex });
     }
@@ -66,6 +66,13 @@ export default class AppProvider extends Component {
     setStartIndex = (index) => {
         return this.setState({ startIndex: index });
     }
+    resetVertex = async ()=>{
+        await this.setStateAsync({vertex1 : "",vertex2:""});
+    }
+    changeVertex = (vertex1, vertex2) => {
+       this.setState({ vertex1: vertex1, vertex2: vertex2 });
+
+    }
     render() {
         return (
             <AppContext.Provider value={{
@@ -80,6 +87,7 @@ export default class AppProvider extends Component {
                 handleDataChange: this.handleDataChange,
                 addVertexToGraphs: this.addVertexToGraphs,
                 setStartIndex: this.setStartIndex,
+                resetVertex:this.resetVertex
             }}>
                 {this.props.children}
             </AppContext.Provider>
