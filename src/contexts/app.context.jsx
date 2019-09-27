@@ -66,6 +66,7 @@ export default class AppProvider extends Component {
         return this.setState({ isDrawedEdges: isDrawedEdges });
     };
     setShortestPath = (path) => {
+        console.log("setShortestPath")
         return this.setState({ shortestPath: path });
     };
     setStartIndex = (index) => {
