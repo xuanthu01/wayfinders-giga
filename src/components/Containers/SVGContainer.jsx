@@ -164,54 +164,61 @@ class SVGContainer extends Component {
     };
     /*XỬ LÍ SỰ KIÊN KHI CLICK TRÊN SVG, DRAW EGDE- DRAW SHORTEST PATH */
     handleMouseClick(e, floorId) {
-        const {
-            addVertexToGraphs, feature,
-            vertex1, vertex2,
-            route, setShortestPath,
-            setVertex
-        } = this.context;
-        const clickTarget = e.target;
-        if (feature === "draw") {
-            if (clickTarget.nodeName === "circle") {
-                if (!this.isDrawingEdge) {
-                    this.setState({ edgeVertex1: clickTarget });
-                    this.isDrawingEdge = true;
-                } else if (clickTarget !== this.state.edgeVertex1) {
-                    this.setState({ edgeVertex2: clickTarget });
-                    drawEdge(this.state.edgeVertex1, this.state.edgeVertex2, floorId, this.deleteEgdes, addVertexToGraphs);
-                    this.setState({ edgeVertex1: null, edgeVertex2: null });
-                    this.isDrawingEdge = false;
+        try {
+            const {
+                addVertexToGraphs, feature,
+                vertex1, vertex2,
+                route, setShortestPath,
+                setVertex
+            } = this.context;
+            const clickTarget = e.target;
+            if (feature === "draw") {
+                if (clickTarget.nodeName === "circle") {
+                    if (!this.isDrawingEdge) {
+                        this.setState({ edgeVertex1: clickTarget });
+                        this.isDrawingEdge = true;
+                    } else if (clickTarget !== this.state.edgeVertex1) {
+                        this.setState({ edgeVertex2: clickTarget });
+                        drawEdge(this.state.edgeVertex1, this.state.edgeVertex2, floorId, this.deleteEgdes, addVertexToGraphs);
+                        this.setState({ edgeVertex1: null, edgeVertex2: null });
+                        this.isDrawingEdge = false;
+                    }
                 }
-            }
-        } else if (feature === "find") {
-            if (document.getElementsByClassName("animation-path").length !== 0) {
-                if (this.state.vertex1State === "" || this.state.vertex2State === "") {
-                    removeShortestPathEl(vertex1, vertex2);
+            } else if (feature === "find") {
+                if (document.getElementsByClassName("animation-path").length !== 0) {
+                    if (this.state.vertex1State === "" || this.state.vertex2State === "") {
+                        removeShortestPathEl(vertex1, vertex2);
+                    }
+                    else if (this.state.vertex1State !== "" && this.state.vertex2State !== "") {
+                        removeShortestPathEl(this.state.vertex1State, this.state.vertex2State);
+                    }
                 }
-                else if (this.state.vertex1State !== "" && this.state.vertex2State !== "") {
-                    removeShortestPathEl(this.state.vertex1State, this.state.vertex2State);
-                }
-            }
-            if (!this.isFindingPath) {
-                document.getElementById("first-vertex").value = e.target.id;
-                this.setState({ vertex1State: e.target.id });
-                this.isFindingPath = true;
-            } else {
+                if (!this.isFindingPath) {
+                    document.getElementById("first-vertex").value = e.target.id;
+                    this.setState({ vertex1State: e.target.id });
+                    this.isFindingPath = true;
+                } else {
 
-                if (e.target.id === this.state.vertex1State) {
-                    alert("Vertex cannot connect it self or loaded this map more than one time");
-                    this.setState({ vertex1State: "", vertex2State: "" });
+                    if (e.target.id === this.state.vertex1State) {
+                        alert("Vertex cannot connect it self or loaded this map more than one time");
+                        this.setState({ vertex1State: "", vertex2State: "" });
+                        this.isFindingPath = false;
+                        return;
+                    }
+                    document.getElementById("second-vertex").value = e.target.id;
+                    this.setState({ vertex2State: e.target.id });
+                    setVertex({ vertex1: this.state.vertex1State, vertex2: this.state.vertex2State });
+                    let pathArrData = drawShortestPath(this.state.vertex1State, this.state.vertex2State, route);
+                    console.log("pathArrData:", pathArrData);
+                    setShortestPath(pathArrData);
                     this.isFindingPath = false;
-                    return;
                 }
-                document.getElementById("second-vertex").value = e.target.id;
-                this.setState({ vertex2State: e.target.id });
-                setVertex({ vertex1: this.state.vertex1State, vertex2: this.state.vertex2State });
-                let pathArrData = drawShortestPath(this.state.vertex1State, this.state.vertex2State, route);
-                setShortestPath(pathArrData);
-                this.isFindingPath = false;
             }
+        } catch (error) {
+            console.log("error in handleMouseClick:", error);
+
         }
+
     }
     /*MENU CHO MAP KHI LOAD MAP LÊN */
     DeleteMap = (floorId) => {

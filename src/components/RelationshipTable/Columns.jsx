@@ -35,7 +35,7 @@ const Neighbors = (data, handleButtonAdd, onChangeData) => {
             const neighborCell = neighbors.map(neighbor => {
                 return <CellEditable key={'neighbor-' + neighbor.id} data={data} node={node} neighbor={neighbor} propertyToEdit='id' onChangeData={onChangeData} />
             });
-            neighborCell.push(<button style={{ float: 'right' }} onClick={() => handleButtonAdd(node, onChangeData)} >+</button>);
+            neighborCell.push(<button key={`button-add-neighbor-${node.id}`} style={{ float: 'right' }} onClick={() => handleButtonAdd(node, onChangeData)} >+</button>);
             return neighborCell;
         },
         filterMethod: (filter, rows) =>
