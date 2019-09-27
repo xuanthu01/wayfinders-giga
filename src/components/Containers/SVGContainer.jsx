@@ -44,7 +44,7 @@ class SVGContainer extends Component {
                         this.createNode_Pathline(listsvg[i], floorId);
                         this.addClickEventForCircle(floorId);
                         showNodes();
-                        console.log(listsvg[i].getElementById(`node-pathline-${floorId}`).childNodes.length );
+                        // console.log(listsvg[i].getElementById(`node-pathline-${floorId}`).childNodes.length );
                         if(listsvg[i].getElementById(`node-pathline-${floorId}`).childNodes.length === 0 )
                         this.drawEdgeFromGraphs(false,floorId);
                         document.getElementById("loadGraph").removeAttribute("disabled");
@@ -300,10 +300,20 @@ class SVGContainer extends Component {
                         
                     }   
                     else  {
-                        console.log("go here");
-                        if (_.findIndex(array, { 'node': nodeNeighborId, 'neighbor': nodeId }) === -1) {
-                            array.push({ 'node': nodeId, 'neighbor': nodeNeighborId });
+                        for(let i = 0 ;i<this.state.listIdOfMap.length;i++)
+                        {
+                            let nodePathEl = document.getElementById(`node-pathline-${this.state.listIdOfMap[i]}`);
+                            if(nodePathEl.childNodes.length === 0)
+                            {
+                                if(this.state.listIdOfMap[i] ===  nodeNeighborId.substring(0,2) || this.state.listIdOfMap[i] === nodeId.substring(0,2))
+                                    if (_.findIndex(array, { 'node': nodeNeighborId, 'neighbor': nodeId }) === -1) {
+                                        array.push({ 'node': nodeId, 'neighbor': nodeNeighborId });
+                                    }
+
+                            }
                         }
+                            
+                                
                     }
                         
 
