@@ -11,74 +11,75 @@ const PathStep = ({ step, index }) => {
 const VertextureComponent = (props) => {
     // console.log(props);
     const { vertex1, vertex2, setVertex, route, shortestPath, setShortestPath, feature } = useContext(AppContext);
-    const _drawShorestPath = () => {
-        try {
-            if (vertex1 !== "" && vertex2 !== "") {
-                console.log("here");
-                removeShortestPathEl(oldVertex1, oldVertex2);
-            }
-            else if (vertex1 !== "" && vertex2 !== "") {
-                removeShortestPathEl(vertex1, vertex2);
-                setVertex({ vertex1: "", vertex2: "" });
-            }
-            console.log(vertex1, vertex2, "vertẽx");
-            if (vertex1.length === 0 && vertex2.length === 0) {
-                console.log("can not get vertexid");
-            }
-            const path = drawShortestPath(vertex1, vertex2, route);
-            if (path && size(path) > 1) {
-                setShortestPath(path);
-                var result = Object.keys(shortestPath).map(function (key) {
-                    return [shortestPath[key]];
-                });
-                let pElement = document.getElementById("node-pathline-list")
-                pElement.innerText = result.join("=>");
-                setOldVertex1(vertex1);
-                setOldVertex2(vertex2);
-                setVertex({ vertex1: vertex1, vertex2: vertex2 });
-            }
-            else throw new Error("Not found shortestPath");
-            // if (shortestPath.length < 1)
-            //     return null;
-
-            // props.changeVertex(vertex1, vertex2);
-        } catch (error) {
-            console.log("error in _drawShorestPath:", error);
-        }
-    }
     // const _drawShorestPath = () => {
-    //     let shortestPath = document.getElementsByClassName("noAnimation-path");
-    //     let isExist = shortestPath.length;
-    //     if (isExist === 1) {
+    //     try {
     //         if (vertex1 !== "" && vertex2 !== "") {
+    //             console.log("here");
+    //             removeShortestPathEl(oldVertex1, oldVertex2);
+    //         }
+    //         else if (vertex1 !== "" && vertex2 !== "") {
     //             removeShortestPathEl(vertex1, vertex2);
     //             setVertex({ vertex1: "", vertex2: "" });
     //         }
-    //         else if (oldVertex1 !== "" && oldVertex2 !== "")
-    //             removeShortestPathEl(oldVertex1, oldVertex2);
-    //     }
+    //         console.log(vertex1, vertex2, "vertẽx");
+    //         if (vertex1.length === 0 && vertex2.length === 0) {
+    //             console.log("can not get vertexid");
+    //         }
+    //         const path = drawShortestPath(vertex1, vertex2, route);
+    //         if (path && size(path) > 1) {
+    //             setShortestPath(path);
+    //             var result = Object.keys(shortestPath).map(function (key) {
+    //                 return [shortestPath[key]];
+    //             });
+    //             let pElement = document.getElementById("node-pathline-list")
+    //             pElement.innerText = result.join("=>");
+    //             setOldVertex1(vertex1);
+    //             setOldVertex2(vertex2);
+    //             setVertex({ vertex1: vertex1, vertex2: vertex2 });
+    //         }
+    //         else throw new Error("Not found shortestPath");
+    //         // if (shortestPath.length < 1)
+    //         //     return null;
 
-    //     let vertexInput1 = document.getElementById("first-vertex").value;
-    //     let vertexInput2 = document.getElementById("second-vertex").value;
-    //     if (vertexInput1.length === 0 && vertexInput2.length === 0) {
-    //         alert(`Can not find shortest path`);
-    //         return;
+    //         // props.changeVertex(vertex1, vertex2);
+    //     } catch (error) {
+    //         console.log("error in _drawShorestPath:", error);
     //     }
-    //     let pathArr = drawShortestPath(vertexInput1, vertexInput2, route);
-    //     if (pathArr === undefined || null)
-    //         return null;
-    //     // props.getPathArr(pathArr);
-    //     setShortestPath(pathArr);
-    //     setOldVertex1(vertexInput1);
-    //     setOldVertex2(vertexInput2);
     // }
+    const _drawShorestPath = () => {
+        let shortestPath = document.getElementsByClassName("noAnimation-path");
+        let isExist = shortestPath.length;
+        if (isExist === 1) {
+            if (vertex1 !== "" && vertex2 !== "") {
+                removeShortestPathEl(vertex1, vertex2);
+                setVertex({ vertex1: "", vertex2: "" });
+            }
+            else if (oldVertex1 !== "" && oldVertex2 !== "")
+                removeShortestPathEl(oldVertex1, oldVertex2);
+        }
+
+        let vertexInput1 = document.getElementById("first-vertex").value;
+        let vertexInput2 = document.getElementById("second-vertex").value;
+        if (vertexInput1.length === 0 && vertexInput2.length === 0) {
+            alert(`Can not find shortest path`);
+            return;
+        }
+        let pathArr = drawShortestPath(vertexInput1, vertexInput2, route);
+        console.log(pathArr)
+        if (pathArr === undefined || null)
+            return null;
+        // props.getPathArr(pathArr);
+        setShortestPath(pathArr);
+        setOldVertex1(vertexInput1);
+        setOldVertex2(vertexInput2);
+    }
     const [oldVertex1, setOldVertex1] = useState('');
     const [oldVertex2, setOldVertex2] = useState('');
     const [v1, setInputVertex1] = useState('');
     const [v2, setInputVertex2] = useState('');
 
     let result;
-    if (shortestPath && size(shortestPath) > 1)
+    if (shortestPath)
         result = Object.keys(shortestPath).map(key => [shortestPath[key]]);
     // console.log("result:", result);
     return (
