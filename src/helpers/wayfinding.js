@@ -68,7 +68,7 @@ function drawShortestPath(vertex1, vertex2, route) {
             for (let i = 1; i < X.length; i++) {
                 M += `L ${X[i]} ${Y[i]} `;
             }
-            const roudingPath = roundPathCorners(M, 0.5, true);
+            const roudingPath = roundPathCorners(M, 0.3, true);
             NoAnimatedPath.setAttributeNS(null, "d", `${roudingPath}`);
             NoAnimatedPath.setAttributeNS(null, "stroke", "rgb(247, 199, 0)");
             NoAnimatedPath.setAttributeNS(null, "stroke-width", "3");

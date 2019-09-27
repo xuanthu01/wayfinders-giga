@@ -25,8 +25,13 @@ export default class AppProvider extends Component {
         const reader = new FileReader();
         reader.onload = async e => {
             const graphsStr = await e.target.result;
-            const graphsJson = JSON.parse(graphsStr);
-            await this.handleGraphsChange(graphsJson);
+            try{
+                const graphsJson = JSON.parse(graphsStr);
+                await this.handleGraphsChange(graphsJson);
+            }
+            catch (error) {
+                console.log("Files error:", error);
+            }
         };
         reader.readAsText(e.target.files[0]);
     };

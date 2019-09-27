@@ -37,7 +37,7 @@ class LoadSVGButton extends Component {
         return false;
     }
     render() {
-        console.log("LoadSvgButton");
+        // console.log("LoadSvgButton");
         return (
             <AppContext.Consumer>
                 {() => (

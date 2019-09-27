@@ -63,6 +63,7 @@ const handleSaveRelationship = (data, type) => {
  * @param {function} addVertexToGraphs
  */
 const drawEdge = async (vertex1, vertex2, floorId, DeleteEgde, addVertexToGraphs) => {
+    // console.log(floorId);
     const node_path = document.getElementById(`node-pathline-${floorId}`);
     const draw = (v1, v2) => {
         const x1 = v1.getAttributeNS(null, "cx");

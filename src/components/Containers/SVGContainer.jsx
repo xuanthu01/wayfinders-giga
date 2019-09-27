@@ -30,17 +30,24 @@ class SVGContainer extends Component {
                 document.getElementById("loadGraph").setAttribute("disabled",true);
                 return;
             }
-            
+           
             
             if (isLoading === false) {
                 
                 for (let i = 0; i < listSVGArray.length; i++) {
+                    
                     let floorId = listsvg[i].getElementById("background").parentElement.attributes.id.value;
                     let nodes = listsvg[i].getElementById("node");
+                    
                     if (nodes) {
                         listsvg[i].setAttribute("id", `svg-${floorId}`);
                         this.createNode_Pathline(listsvg[i], floorId);
                         this.addClickEventForCircle(floorId);
+                        showNodes();
+                        console.log(listsvg[i].getElementById(`node-pathline-${floorId}`).childNodes.length );
+                        if(listsvg[i].getElementById(`node-pathline-${floorId}`).childNodes.length === 0 )
+                        this.drawEdgeFromGraphs(false,floorId);
+                        document.getElementById("loadGraph").removeAttribute("disabled");
                     }
                 }
                 return;
@@ -64,7 +71,7 @@ class SVGContainer extends Component {
             // else if(this.context.feature === "draw")   
             document.getElementById("loadGraph").removeAttribute("disabled");
             showNodes();
-            this.drawEdgeFromGraphs(false);
+            this.drawEdgeFromGraphs(false,undefined);
         } catch (error) {
             console.log("handleSVG failed:", error);
         }
@@ -141,7 +148,7 @@ class SVGContainer extends Component {
         divMenuOfMap.appendChild(button);
         divMenuOfMap.appendChild(space);
     }
-    createNode_Pathline = (svgElement, floorId) => {
+    createNode_Pathline =  (svgElement, floorId) => {
         let node_pathline = document.createElementNS("http://www.w3.org/2000/svg", "g");
         node_pathline.setAttributeNS(null, "id", `node-pathline-${floorId}`);
         let nodes = svgElement.getElementById("node");
@@ -232,22 +239,28 @@ class SVGContainer extends Component {
     }
     /*MENU CHO MAP KHI LOAD MAP LÊN */
     DeleteMap = (floorId) => {
-        const { AdjustNumberOfMap } = this.context;
-        let radioElement = document.getElementById(`radio-${floorId}`);
-        document.getElementsByClassName("svg-container")[0].removeChild(radioElement.parentElement);
-        let deleteFileIndex;
-        const { listIdOfMap } = this.state;
-        for (let i = 0; i < listIdOfMap.length; i++) {
-            if (listIdOfMap[i] === floorId) {
-                deleteFileIndex = i;
-                break;
+        try{
+            const { AdjustNumberOfMap,setDrawedEdge } = this.context;
+            let radioElement = document.getElementById(`radio-${floorId}`);
+            document.getElementsByClassName("svg-container")[0].removeChild(radioElement.parentElement);
+            let deleteFileIndex;
+            const { listIdOfMap } = this.state;
+            for (let i = 0; i < listIdOfMap.length; i++) {
+                if (listIdOfMap[i] === floorId) {
+                    deleteFileIndex = i;
+                    break;
+                }
             }
+            var cloneState = [...listIdOfMap];
+            cloneState.splice(deleteFileIndex, 1);
+            this.setState({ listIdOfMap: cloneState });
+            this.setState({ numDeleted: this.state.numDeleted + 1 })
+            AdjustNumberOfMap(deleteFileIndex);
+            setDrawedEdge(false);
         }
-        var cloneState = [...listIdOfMap];
-        cloneState.splice(deleteFileIndex, 1);
-        this.setState({ listIdOfMap: cloneState });
-        this.setState({ numDeleted: this.state.numDeleted + 1 })
-        AdjustNumberOfMap(deleteFileIndex);
+        catch (error) {
+            console.log("DeleteMap failed:", error);
+        }
 
     }
     scrollMap = (floorId) => {
@@ -268,31 +281,49 @@ class SVGContainer extends Component {
         removeEdgeElement(edge);
         await removeRelationship(vertex1Id, vertex2Id);
     };
-    drawEdgeFromGraphs = (isDrawedEdges) => {
+    drawEdgeFromGraphs = (isDrawedEdges,floorId) => {
         const {setDrawedEdge,addVertexToGraphs,graphs} = this.context;
         try {
             if (isDrawedEdges) return;
             const array = [];
             Object.keys(graphs).forEach(nodeId => {
                 Object.keys(graphs[nodeId]).forEach(nodeNeighborId => {
-                    if (_.findIndex(array, { 'node': nodeNeighborId, 'neighbor': nodeId }) === -1) {
-                        array.push({ 'node': nodeId, 'neighbor': nodeNeighborId });
+                    // console.log(floorId);
+                    if(floorId !== undefined)
+                    {
+                        if(floorId === nodeNeighborId.substring(0,2) || floorId === nodeId.substring(0,2) )
+                        {
+                            if (_.findIndex(array, { 'node': nodeNeighborId, 'neighbor': nodeId }) === -1) {
+                                array.push({ 'node': nodeId, 'neighbor': nodeNeighborId });
+                            }
+                        }
+                        
+                    }   
+                    else  {
+                        console.log("go here");
+                        if (_.findIndex(array, { 'node': nodeNeighborId, 'neighbor': nodeId }) === -1) {
+                            array.push({ 'node': nodeId, 'neighbor': nodeNeighborId });
+                        }
                     }
+                        
+
                 });
             });
             array.forEach(async item => {
-                if (item.node.substring(0, 2) === item.neighbor.substring(0, 2))
-                    await drawEdge(item.node, item.neighbor, item.node.substring(0, 2), this.deleteEgdes, addVertexToGraphs);
+
+                    if (item.node.substring(0, 2) === item.neighbor.substring(0, 2))
+                        await drawEdge(item.node, item.neighbor, item.node.substring(0, 2), this.deleteEgdes, addVertexToGraphs);
+
             });
             const line = document.querySelector("[id*='node-pathline']");
             if (graphs !== {} && line && line.childNodes.length > 0)
                 setDrawedEdge(true);
         } catch (error) {
-            console.log("error in DrawRadioButton:", error);
+            console.log("error in drawEdgeFromGraphs:", error);
         }
     }
     render() {
-        console.log("SVGContainer");
+        // console.log("SVGContainer");
         const { listSVGArray } = this.context;
         return (
             <div id="list-svg">

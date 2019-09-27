@@ -75,19 +75,24 @@ class RelationshipTable extends React.Component {
     };
     handleAddRelationship = (node) => {
         console.log("handleAddRelationship: ", node);
-        const { data, handleDataChange } = this.context;
-        data.forEach(item => {
-            if (item.node === node) {
-                const newNeighbor = {
-                    id: 'new-neighbor-',
-                    name: 'new Neighbor ',
-                    type: 'path',
-                    cost: 1
+        try{
+            const { data, handleDataChange } = this.context;
+            data.forEach(item => {
+                if (item.node === node) {
+                    const newNeighbor = {
+                        id: 'new-neighbor-',
+                        name: 'new Neighbor ',
+                        type: 'path',
+                        cost: 1
+                    }
+                    item.neighbors.push(newNeighbor);;
                 }
-                item.neighbors.push(newNeighbor);;
-            }
-        });
-        handleDataChange(data);
+            });
+            handleDataChange(data);
+        }
+        catch (error) {
+            console.log("failed in handleAddRelationship in RelationshipTable:", error);
+        }
     };
     getColumns = () => {
         const { data, handleDataChange } = this.context;
@@ -112,6 +117,9 @@ class RelationshipTable extends React.Component {
             }
         ];
         return columns;
+    }
+    shouldComponentUpdate(){
+
     }
     render() {
         console.log("RelationshipTable");
