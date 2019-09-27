@@ -16,7 +16,7 @@ class Wayfinders extends Component {
                         <LoadGraphButton />
                         {/* <SaveGraphButton /> */}
                         <DrawRadioButton />
-                        <DeleteRadioButton />
+                        {/* <DeleteRadioButton /> */}
                         <WayFindRadioButton />
                     </div>
                     <div className="svg-zone" style={{ textAlign: "center" }}>
