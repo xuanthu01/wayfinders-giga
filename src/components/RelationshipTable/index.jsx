@@ -51,11 +51,8 @@ class RelationshipTable extends React.Component {
                 if (isExisting) {
                     remove(item.neighbors, nb => nb.id === neighbor.id);
                 }
-                // if (item.node === node && item.neighbors.some(neighbor => )) {
-
-                // }
             });
-            await this.context.handleDataChange(data);
+            // await this.context.handleDataChange(data);
         } catch (error) {
             console.log("failed in handleRemoveNeighbor in RelationshipTable:", error);
         }

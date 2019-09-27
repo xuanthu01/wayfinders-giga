@@ -257,7 +257,8 @@ class SVGContainer extends Component {
         });
     }
     shouldComponentUpdate(nextProps, nextState) {
-        return this.state.listSvgArrState !== nextState.listSvgArrState;
+        // return this.state.listSvgArrState !== nextState.listSvgArrState;
+        return false;
     }
     
     render() {
