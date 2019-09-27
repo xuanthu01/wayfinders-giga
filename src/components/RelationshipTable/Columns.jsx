@@ -6,7 +6,7 @@ const styles = {
     backgroundColor: '#dadada',
     // borderRadius: '2px',
     marginTop: 5,
-    marginBottom: 1
+    marginBottom: 0
 }
 const Node = {
     Header: 'Node',
