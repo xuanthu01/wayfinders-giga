@@ -27,6 +27,7 @@ class SVGContainer extends Component {
             let listsvg = document.getElementsByTagName("svg");
             let notFinishLoad = listsvg.length < listSVGArray.length;
             if (notFinishLoad === true) {
+                document.getElementById("loadGraph").setAttribute("disabled",true);
                 return;
             }
             
@@ -61,7 +62,7 @@ class SVGContainer extends Component {
             if(this.context.feature === "find")
                 showNodes(true);
             // else if(this.context.feature === "draw")   
-                
+            document.getElementById("loadGraph").removeAttribute("disabled");
         } catch (error) {
             console.log("handleSVG failed:", error);
         }
@@ -257,8 +258,8 @@ class SVGContainer extends Component {
         });
     }
     shouldComponentUpdate(nextProps, nextState) {
-        // return this.state.listSvgArrState !== nextState.listSvgArrState;
-        return false;
+        return this.state.listSvgArrState !== nextState.listSvgArrState;
+        // return false;
     }
     
     render() {

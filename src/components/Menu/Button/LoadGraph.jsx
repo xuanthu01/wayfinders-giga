@@ -3,6 +3,7 @@ import { AppContext } from '../../../contexts/app.context';
 export default function LoadGraphButton(props) {
     const { handleGraphsFileUpload } = useContext(AppContext);
     const handleLoadGraphsClick = async () => {
+        // console.log(document.getElementsByClassName("menuOfMap").length !== );
         const fileInput = await renderGraphsLoader();
         await fileInput.addEventListener("change", e => {
             if (fileInput.files[0].name.match(/\.(txt|json)$/)) {
@@ -23,7 +24,7 @@ export default function LoadGraphButton(props) {
         <AppContext.Consumer>
             {() => (
                 <>
-                <button onClick={handleLoadGraphsClick}>Load Graphs File</button>
+                <button id="loadGraph" onClick={handleLoadGraphsClick}>Load Graphs File</button>
                 <br/>
                 </>
             )}
