@@ -3,14 +3,14 @@ import { If, removeShortestPathEl, showNodes, hideEdges } from "../../../shared"
 import { drawShortestPath } from "../../../helpers";
 import { useState, useContext } from 'react';
 import { AppContext } from '../../../contexts/app.context';
-import { isEmpty } from 'lodash';
+import { isEmpty, size } from 'lodash';
 
 const PathStep = ({ step, index }) => {
     return `Step ${index} : ${step[0].join("=>").toString()}`;
 }
 const VertextureComponent = (props) => {
     // console.log(props);
-    const { vertex1, vertex2, setVertex, route, shortestPath, setShortestPath } = useContext(AppContext);
+    const { vertex1, vertex2, setVertex, route, shortestPath, setShortestPath, feature } = useContext(AppContext);
     const _drawShorestPath = () => {
         try {
             if (vertex1 !== "" && vertex2 !== "") {
@@ -26,17 +26,21 @@ const VertextureComponent = (props) => {
                 console.log("can not get vertexid");
             }
             const path = drawShortestPath(vertex1, vertex2, route);
-            setShortestPath(path);
-            if (shortestPath === undefined || null)
-                return null;
-            var result = Object.keys(shortestPath).map(function (key) {
-                return [shortestPath[key]];
-            });
-            let pElement = document.getElementById("node-pathline-list")
-            pElement.innerText = result.join("=>");
-            setOldVertex1(vertex1);
-            setOldVertex2(vertex2);
-            setVertex({ vertex1: vertex1, vertex2: vertex2 })
+            if (path && size(path) > 1) {
+                setShortestPath(path);
+                var result = Object.keys(shortestPath).map(function (key) {
+                    return [shortestPath[key]];
+                });
+                let pElement = document.getElementById("node-pathline-list")
+                pElement.innerText = result.join("=>");
+                setOldVertex1(vertex1);
+                setOldVertex2(vertex2);
+                setVertex({ vertex1: vertex1, vertex2: vertex2 });
+            }
+            else throw new Error("Not found shortestPath");
+            // if (shortestPath.length < 1)
+            //     return null;
+
             // props.changeVertex(vertex1, vertex2);
         } catch (error) {
             console.log("error in _drawShorestPath:", error);
@@ -73,13 +77,10 @@ const VertextureComponent = (props) => {
     const [v1, setInputVertex1] = useState('');
     const [v2, setInputVertex2] = useState('');
 
-    if (shortestPath === undefined || null)
-        return null;
-    var result = Object.keys(shortestPath).map(function (key) {
-        return [shortestPath[key]];
-    });
+    let result;
+    if (shortestPath && size(shortestPath) > 1)
+        result = Object.keys(shortestPath).map(key => [shortestPath[key]]);
     // console.log("result:", result);
-
     return (
         <div>
             <input type="text" id="first-vertex" onBlur={e => {
@@ -98,7 +99,7 @@ const VertextureComponent = (props) => {
             <div id="node-pathline-list" style={{ whiteSpace: "nowrap", overflow: "auto" }}>
                 {
                     // props !== {} ? <p id="node-pathline-list" style={{ whiteSpace: "nowrap", overflow: "auto", }}>{result.join("=>")}</p> : null
-                    props.pathArr !== {} ? result.map((step, index) => {
+                    result ? result.map((step, index) => {
                         return <>
                             <p>
                                 <PathStep key={index} step={step} index={index + 1} />
