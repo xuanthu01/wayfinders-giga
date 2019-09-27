@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import ReactSVG from 'react-inlinesvg';
-
+import _ from "lodash";
 // import _ from 'lodash';
 import { drawShortestPath, } from "../../helpers";
-import { drawEdge, highLightNodeEl, removeShortestPathEl, showNodes } from "../../shared"
+import { drawEdge, highLightNodeEl, removeShortestPathEl, showNodes,removeEdgeElement } from "../../shared"
 import CombinedCtxProvider, { CombinedContext } from '../../contexts/combined.context';
 
 // import { isFulfilled } from 'q';
@@ -22,7 +22,7 @@ class SVGContainer extends Component {
 
     handleSVG = async (src, hasCache) => {
         try {
-            const { startIndex, isLoading, listSVGArray} = this.context;
+            const { startIndex, isLoading, listSVGArray,setFeature } = this.context;
             let index = startIndex;
             let listsvg = document.getElementsByTagName("svg");
             let notFinishLoad = listsvg.length < listSVGArray.length;
@@ -59,10 +59,12 @@ class SVGContainer extends Component {
                 const floorId = circleNode.id.substring(0, 2);
                 this.addClickEventForCirclesYAH(circleNode, floorId);
             });
-            if(this.context.feature === "find")
-                showNodes(true);
+            // if(this.context.feature === "find")
+            //     showNodes(true);
             // else if(this.context.feature === "draw")   
             document.getElementById("loadGraph").removeAttribute("disabled");
+            showNodes();
+            this.drawEdgeFromGraphs(false);
         } catch (error) {
             console.log("handleSVG failed:", error);
         }
@@ -261,7 +263,34 @@ class SVGContainer extends Component {
         return this.state.listSvgArrState !== nextState.listSvgArrState;
         // return false;
     }
-    
+    deleteEgdes = async (edge, vertex1Id, vertex2Id) => {
+        const  {removeRelationship} = this.context;
+        removeEdgeElement(edge);
+        await removeRelationship(vertex1Id, vertex2Id);
+    };
+    drawEdgeFromGraphs = (isDrawedEdges) => {
+        const {setDrawedEdge,addVertexToGraphs,graphs} = this.context;
+        try {
+            if (isDrawedEdges) return;
+            const array = [];
+            Object.keys(graphs).forEach(nodeId => {
+                Object.keys(graphs[nodeId]).forEach(nodeNeighborId => {
+                    if (_.findIndex(array, { 'node': nodeNeighborId, 'neighbor': nodeId }) === -1) {
+                        array.push({ 'node': nodeId, 'neighbor': nodeNeighborId });
+                    }
+                });
+            });
+            array.forEach(async item => {
+                if (item.node.substring(0, 2) === item.neighbor.substring(0, 2))
+                    await drawEdge(item.node, item.neighbor, item.node.substring(0, 2), this.deleteEgdes, addVertexToGraphs);
+            });
+            const line = document.querySelector("[id*='node-pathline']");
+            if (graphs !== {} && line && line.childNodes.length > 0)
+                setDrawedEdge(true);
+        } catch (error) {
+            console.log("error in DrawRadioButton:", error);
+        }
+    }
     render() {
         console.log("SVGContainer");
         const { listSVGArray } = this.context;

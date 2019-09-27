@@ -14,7 +14,7 @@ function ButtonFeature({ handleEditRelationship, handleSaveRelationship }) {
         <div style={{ textAlign: 'right' }}>
             <input type="checkbox" id="checkbox-editmode" /> Edit mode
 
-            <button style={styles} onClick={() => handleSaveRelationship()} >Save</button>
+            {/* <button style={styles} onClick={() => handleSaveRelationship()} >Save</button> */}
         </div>
     )
 }

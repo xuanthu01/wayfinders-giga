@@ -25,7 +25,7 @@ export default function LoadGraphButton(props) {
             {() => (
                 <>
                 <button id="loadGraph" onClick={handleLoadGraphsClick}>Load Graphs File</button>
-                <br/>
+                {/* <br/> */}
                 </>
             )}
         </AppContext.Consumer>
