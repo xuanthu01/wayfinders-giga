@@ -22,7 +22,10 @@ export default function LoadGraphButton(props) {
     return (
         <AppContext.Consumer>
             {() => (
+                <>
                 <button onClick={handleLoadGraphsClick}>Load Graphs File</button>
+                <br/>
+                </>
             )}
         </AppContext.Consumer>
     )

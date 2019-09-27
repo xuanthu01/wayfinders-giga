@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { AppProvider, AppContext } from '../contexts';
 import { WayFindRadioButton, DrawRadioButton, DeleteRadioButton } from './Menu/RadioButton';
-import { LoadSVGButton, LoadGraphButton, SaveGraphButton } from './Menu/Button';
+import { LoadSVGButton, LoadGraphButton } from './Menu/Button';
 import RelationshipTable from './RelationshipTable';
 import SVGContainer from './Containers/SVGContainer';
 import { SVGProvider } from '../contexts/svg.context';
@@ -14,7 +14,7 @@ class Wayfinders extends Component {
                 <div className="wayfinders-app">
                     <div className="menu-button" style={{ textAlign: "center" }}>
                         <LoadGraphButton />
-                        <SaveGraphButton />
+                        {/* <SaveGraphButton /> */}
                         <DrawRadioButton />
                         <DeleteRadioButton />
                         <WayFindRadioButton />

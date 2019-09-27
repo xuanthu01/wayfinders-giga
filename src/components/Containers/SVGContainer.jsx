@@ -3,7 +3,7 @@ import ReactSVG from 'react-inlinesvg';
 
 // import _ from 'lodash';
 import { drawShortestPath, } from "../../helpers";
-import { drawEdge, highLightNodeEl, removeShortestPathEl } from "../../shared"
+import { drawEdge, highLightNodeEl, removeShortestPathEl, showNodes } from "../../shared"
 import CombinedCtxProvider, { CombinedContext } from '../../contexts/combined.context';
 
 // import { isFulfilled } from 'q';
@@ -22,14 +22,17 @@ class SVGContainer extends Component {
 
     handleSVG = async (src, hasCache) => {
         try {
-            const { startIndex, isLoading, listSVGArray } = this.context;
+            const { startIndex, isLoading, listSVGArray} = this.context;
             let index = startIndex;
             let listsvg = document.getElementsByTagName("svg");
             let notFinishLoad = listsvg.length < listSVGArray.length;
             if (notFinishLoad === true) {
                 return;
             }
+            
+            
             if (isLoading === false) {
+                
                 for (let i = 0; i < listSVGArray.length; i++) {
                     let floorId = listsvg[i].getElementById("background").parentElement.attributes.id.value;
                     let nodes = listsvg[i].getElementById("node");
@@ -55,6 +58,10 @@ class SVGContainer extends Component {
                 const floorId = circleNode.id.substring(0, 2);
                 this.addClickEventForCirclesYAH(circleNode, floorId);
             });
+            if(this.context.feature === "find")
+                showNodes(true);
+            // else if(this.context.feature === "draw")   
+                
         } catch (error) {
             console.log("handleSVG failed:", error);
         }
@@ -80,7 +87,7 @@ class SVGContainer extends Component {
             node.addEventListener("mouseover", e => {
                 if (!e.target.id.includes("PATH")) {
                     this.showNodeInfo(e.target);
-                    highLightNodeEl(e.target.id, 500, false);
+                    // highLightNodeEl(e.target.id, 500, false);
                 }
             });
             node.addEventListener("mouseout", e => {
@@ -113,7 +120,7 @@ class SVGContainer extends Component {
     addMenuForMap = (floorId) => {
         let divMenuOfMap = document.createElement("div");
         divMenuOfMap.setAttribute("class", "menuOfMap");
-        document.getElementsByClassName("menu-button")[0].parentElement.appendChild(divMenuOfMap);
+        document.getElementsByClassName("svg-container")[0].appendChild(divMenuOfMap);
         let radio = document.createElement("input");
         radio.setAttribute("type", "radio");
         radio.setAttribute("name", "radioGroup");
@@ -224,7 +231,7 @@ class SVGContainer extends Component {
     DeleteMap = (floorId) => {
         const { AdjustNumberOfMap } = this.context;
         let radioElement = document.getElementById(`radio-${floorId}`);
-        document.getElementsByClassName("menu-button")[0].parentElement.removeChild(radioElement.parentElement);
+        document.getElementsByClassName("svg-container")[0].removeChild(radioElement.parentElement);
         let deleteFileIndex;
         const { listIdOfMap } = this.state;
         for (let i = 0; i < listIdOfMap.length; i++) {
@@ -252,6 +259,7 @@ class SVGContainer extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         return this.state.listSvgArrState !== nextState.listSvgArrState;
     }
+    
     render() {
         console.log("SVGContainer");
         const { listSVGArray } = this.context;

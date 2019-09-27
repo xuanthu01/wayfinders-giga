@@ -9,6 +9,7 @@ const PathStep = ({ step, index }) => {
     return `Step ${index} : ${step[0].join("=>").toString()}`;
 }
 const VertextureComponent = (props) => {
+    // console.log(props);
     const { vertex1, vertex2, setVertex, route, shortestPath, setShortestPath } = useContext(AppContext);
     const _drawShorestPath = () => {
         try {
@@ -67,17 +68,17 @@ const VertextureComponent = (props) => {
     //     setOldVertex1(vertexInput1);
     //     setOldVertex2(vertexInput2);
     // }
-    // const [oldVertex1, setOldVertex1] = useState('');
-    // const [oldVertex2, setOldVertex2] = useState('');
-    // const [v1, setInputVertex1] = useState('');
-    // const [v2, setInputVertex2] = useState('');
+    const [oldVertex1, setOldVertex1] = useState('');
+    const [oldVertex2, setOldVertex2] = useState('');
+    const [v1, setInputVertex1] = useState('');
+    const [v2, setInputVertex2] = useState('');
 
-    // if (shortestPath === undefined || null)
-    //     return null;
-    // var result = Object.keys(shortestPath).map(function (key) {
-    //     return [shortestPath[key]];
-    // });
-    // // console.log("result:", result);
+    if (shortestPath === undefined || null)
+        return null;
+    var result = Object.keys(shortestPath).map(function (key) {
+        return [shortestPath[key]];
+    });
+    // console.log("result:", result);
 
     return (
         <div>
@@ -97,7 +98,7 @@ const VertextureComponent = (props) => {
             <div id="node-pathline-list" style={{ whiteSpace: "nowrap", overflow: "auto" }}>
                 {
                     // props !== {} ? <p id="node-pathline-list" style={{ whiteSpace: "nowrap", overflow: "auto", }}>{result.join("=>")}</p> : null
-                    shortestPath !== {} ? result.map((step, index) => {
+                    props.pathArr !== {} ? result.map((step, index) => {
                         return <>
                             <p>
                                 <PathStep key={index} step={step} index={index + 1} />

@@ -55,7 +55,7 @@ class LoadSVGButton extends Component {
                                 clickable
                             >
                                 Drop files here or click to upload
-                        </Files>
+                            </Files>
                         )}
                     </SVGContext.Consumer>
                 )}
