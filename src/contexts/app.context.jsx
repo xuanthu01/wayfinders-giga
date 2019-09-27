@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Graph from 'node-dijkstra';
 import { serializeGraphsToData, addVertexToGraphs, removeVertexFromGraphs } from '../helpers';
 import { deserializeDataToGraphs } from '../shared';
+import { removeNeighbor } from '../helpers/graph';
 export const AppContext = React.createContext();
 export default class AppProvider extends Component {
     state = {
@@ -44,6 +45,10 @@ export default class AppProvider extends Component {
     removeRelationship = async (nodeId, neighborId) => {
         return await removeVertexFromGraphs(nodeId, neighborId, this.state.graphs, this.handleGraphsChange);
     };
+    removeNeighborOfNode = (nodeId, neighborId) => {
+        removeNeighbor(nodeId, neighborId, this.state.graphs)
+            .then(async graphs => await this.handleGraphsChange(graphs));
+    }
     addVertexToGraphs = async (vertex1, vertex2) => {
         return await addVertexToGraphs(vertex1, vertex2, this.state.graphs, this.handleGraphsChange);
     };
@@ -66,11 +71,11 @@ export default class AppProvider extends Component {
     setStartIndex = (index) => {
         return this.setState({ startIndex: index });
     }
-    resetVertex = async ()=>{
-        await this.setStateAsync({vertex1 : "",vertex2:""});
+    resetVertex = async () => {
+        await this.setStateAsync({ vertex1: "", vertex2: "" });
     }
     changeVertex = (vertex1, vertex2) => {
-       this.setState({ vertex1: vertex1, vertex2: vertex2 });
+        this.setState({ vertex1: vertex1, vertex2: vertex2 });
 
     }
     render() {
@@ -87,7 +92,8 @@ export default class AppProvider extends Component {
                 handleDataChange: this.handleDataChange,
                 addVertexToGraphs: this.addVertexToGraphs,
                 setStartIndex: this.setStartIndex,
-                resetVertex:this.resetVertex
+                resetVertex: this.resetVertex,
+                removeNeighborOfNode: this.removeNeighborOfNode,
             }}>
                 {this.props.children}
             </AppContext.Provider>

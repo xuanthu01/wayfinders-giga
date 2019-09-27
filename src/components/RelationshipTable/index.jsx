@@ -22,7 +22,7 @@ class RelationshipTable extends React.Component {
     static contextType = AppContext;
     handleRemoveNeighbor = async (node, neighbor) => {
         try {
-            const { data, graphs, removeRelationship } = this.context;
+            const { data, graphs, removeNeighborOfNode } = this.context;
             console.log("data", data);
             data.forEach(async item => {
                 //tìm node để xóa neighbor & tìm neighbor để xóa node 
@@ -34,7 +34,7 @@ class RelationshipTable extends React.Component {
                     if (nodeRemoved.length > 0) {
                         //remove in graphs
                         nodeRemoved.forEach(async removed => {
-                            await removeRelationship(node.id, removed.id);
+                            removeNeighborOfNode(node.id, removed.id);
                         });
                         //remove edges element
                         try {
@@ -52,7 +52,6 @@ class RelationshipTable extends React.Component {
                     remove(item.neighbors, nb => nb.id === neighbor.id);
                 }
             });
-            // await this.context.handleDataChange(data);
         } catch (error) {
             console.log("failed in handleRemoveNeighbor in RelationshipTable:", error);
         }

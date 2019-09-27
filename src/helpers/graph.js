@@ -104,6 +104,19 @@ async function removeVertexFromGraphs(v1, v2, graphs, onChangeGraphs) {
         await onChangeGraphs(graphs);
     }
 }
+function removeNeighbor(node, neighbor, graphs, onChangeGraphs) {
+    return new Promise((resolve)=>{
+        if (_.has(graphs, [node, neighbor])) {
+            delete graphs[node][neighbor];
+            if (_.isEmpty(graphs[node])) {
+                delete graphs[node];
+            };
+            return resolve(graphs);
+            // await onChangeGraphs(graphs);
+        }
+    })
+    
+}
 /**
  * 
  * @param {{}} graphs object graphs
@@ -116,4 +129,4 @@ function checkEdgesExist(graphs, v1, v2) {
     }
     return false;
 }
-export { addVertexToGraphs, removeVertexFromGraphs, checkEdgesExist }
+export { addVertexToGraphs, removeVertexFromGraphs, removeNeighbor, checkEdgesExist }
