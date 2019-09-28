@@ -23,10 +23,9 @@ class RelationshipTable extends React.Component {
     handleRemoveNeighbor = async (node, neighbor) => {
         try {
             const { data, graphs, removeNeighborOfNode } = this.context;
-            console.log(node, neighbor);
             data.forEach(async item => {
                 //tìm node để xóa neighbor & tìm neighbor để xóa node 
-                if (item.node === node ) {
+                if (item.node === node) {
                     const nodeRemoved = remove(item.neighbors, nb => nb === neighbor || nb.id === node.id);
                     if (isEmpty(item.neighbors)) {
                         remove(data, nodeNoNeighbor => nodeNoNeighbor.node.id === item.node.id);
@@ -34,28 +33,23 @@ class RelationshipTable extends React.Component {
                     if (nodeRemoved.length > 0) {
                         //remove in graphs
                         nodeRemoved.forEach(async removed => {
-                            removeNeighborOfNode(node.id, removed.id);
+                            await removeNeighborOfNode(node.id, removed.id);
                         });
                         //remove edges element
                         try {
-                            data.forEach(async item => {                              
-                                if(item.node.id === neighbor.id)
-                                {
+                            data.forEach(async item => {
+                                if (item.node.id === neighbor.id) {
                                     let check = 0;
-                                    for(let i =0;i<item.neighbors.length;i++)                                   
-                                        if(item.neighbors[i].id !== node.id) 
-                                        {
+                                    for (let i = 0; i < item.neighbors.length; i++)
+                                        if (item.neighbors[i].id !== node.id) {
                                             // console.log(item.neighbors[i],node.id);
-                                            check ++;
-                                        
-                                        } 
-                                    console.log(check,"check");    
-                                    if(check === item.neighbors.length )         
-                                    removeEdgeElement(`${node.id}:${nodeRemoved[0].id}`);
-                                }                      
+                                            check++;
+                                        }
+                                    console.log(check, "check");
+                                    if (check === item.neighbors.length)
+                                        await removeEdgeElement(`${node.id}:${nodeRemoved[0].id}`);
+                                }
                             })
-                                
-                            
                         } catch (error) {
                             throw error;
                         }
@@ -75,7 +69,7 @@ class RelationshipTable extends React.Component {
     };
     handleAddRelationship = (node) => {
         console.log("handleAddRelationship: ", node);
-        try{
+        try {
             const { data, handleDataChange } = this.context;
             data.forEach(item => {
                 if (item.node === node) {
@@ -118,7 +112,7 @@ class RelationshipTable extends React.Component {
         ];
         return columns;
     }
-    shouldComponentUpdate(){
+    shouldComponentUpdate() {
 
     }
     render() {

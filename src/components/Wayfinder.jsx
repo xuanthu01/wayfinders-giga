@@ -5,7 +5,6 @@ import { LoadSVGButton, LoadGraphButton,SaveGraphButton } from './Menu/Button';
 import RelationshipTable from './RelationshipTable';
 import SVGContainer from './Containers/SVGContainer';
 import { SVGProvider } from '../contexts/svg.context';
-import { If } from '../shared';
 class Wayfinders extends Component {
     static contextType = AppContext;
     render() {

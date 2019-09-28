@@ -51,7 +51,7 @@ export default class AppProvider extends Component {
         return await removeVertexFromGraphs(nodeId, neighborId, this.state.graphs, this.handleGraphsChange);
     };
     removeNeighborOfNode = (nodeId, neighborId) => {
-        removeNeighbor(nodeId, neighborId, this.state.graphs)
+        return removeNeighbor(nodeId, neighborId, this.state.graphs)
             .then(async graphs => await this.handleGraphsChange(graphs));
     }
     addVertexToGraphs = async (vertex1, vertex2) => {
@@ -59,9 +59,8 @@ export default class AppProvider extends Component {
     };
 
 
+    //set sync
     setVertex = (vertex) => {
-        // console.log("setVertex", vertex);
-
         return this.setState({ ...vertex });
     }
     setFeature = feature => {
@@ -71,7 +70,6 @@ export default class AppProvider extends Component {
         return this.setState({ isDrawedEdges: isDrawedEdges });
     };
     setShortestPath = (path) => {
-        console.log("setShortestPath")
         return this.setState({ shortestPath: path });
     };
     setStartIndex = (index) => {

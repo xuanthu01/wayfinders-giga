@@ -104,7 +104,15 @@ async function removeVertexFromGraphs(v1, v2, graphs, onChangeGraphs) {
         await onChangeGraphs(graphs);
     }
 }
-function removeNeighbor(node, neighbor, graphs, onChangeGraphs) {
+/**
+ * 
+ * @param {string} node 
+ * @param {string} neighbor 
+ * @param {{}} graphs 
+ * @description xóa 1 chiều neighbor của node trong graphs
+ * @returns Promise resolve graphs
+ */
+function removeNeighbor(node, neighbor, graphs) {
     return new Promise((resolve)=>{
         if (_.has(graphs, [node, neighbor])) {
             delete graphs[node][neighbor];
@@ -112,10 +120,8 @@ function removeNeighbor(node, neighbor, graphs, onChangeGraphs) {
                 delete graphs[node];
             };
             return resolve(graphs);
-            // await onChangeGraphs(graphs);
         }
     })
-    
 }
 /**
  * 
