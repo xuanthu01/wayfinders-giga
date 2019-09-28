@@ -44,13 +44,13 @@ class SVGContainer extends Component {
     }
     handleSVG = async (src, hasCache) => {
         try {
-            this.autoCloseAlert();
+            // this.autoCloseAlert();
             const { startIndex, isLoading, listSVGArray,setFeature } = this.context;
             let index = startIndex;
             let listsvg = document.getElementsByTagName("svg");
             let notFinishLoad = listsvg.length < listSVGArray.length;
             if (notFinishLoad === true) {
-                
+                console.log(document.getElementById("loadGraph"));
                 document.getElementById("loadGraph").setAttribute("disabled",true);
                 return;
             }
@@ -77,7 +77,9 @@ class SVGContainer extends Component {
                 return;
             }
             for (let i = index - this.state.numDeleted; i < listSVGArray.length; i++) {
+                console.log(listsvg[i].getElementById("background"));
                 let floorId = listsvg[i].getElementById("background").parentElement.attributes.id.value;
+                
                 listsvg[i].setAttribute("id", `svg-${floorId}`);
                 this.createNode_Pathline(listsvg[i], floorId);
                 this.addClickEventForCircle(floorId);

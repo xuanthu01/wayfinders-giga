@@ -26,12 +26,12 @@ export default function SaveGraphButton() {
         <AppContext.Consumer>
             {() => (
                 <>
-                    {/* <button onClick={() => handleSaveRelationship(graphs, "graphs")}>Save Graphs</button><br /> */}
-                    <Button variant="contained" size="small" color="primary" className={classes.button} onClick={() => handleSaveRelationship(graphs, "graphs")}>
+                    <button onClick={() => handleSaveRelationship(graphs, "graphs")}>Save Graphs</button><br />
+                    {/* <Button variant="contained" size="small" color="primary" className={classes.button} onClick={() => handleSaveRelationship(graphs, "graphs")}>
                         <SaveIcon className={clsx(classes.leftIcon, classes.iconSmall)} />
                         Save Graphs
-                    </Button>
-                    <br />
+                    </Button> */}
+                    {/* <br /> */}
                 </>
             )}
         </AppContext.Consumer>

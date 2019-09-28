@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
 import { AppContext } from '../../../contexts/app.context';
-import { Button } from '@material-ui/core';
+// import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+// import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 export default function LoadGraphButton(props) {
     const useStyles = makeStyles(theme => ({
         button: {
@@ -42,12 +42,12 @@ export default function LoadGraphButton(props) {
         <AppContext.Consumer>
             {() => (
                 <>
-                <Button variant="contained" color="primary" className={classes.button} onClick={handleLoadGraphsClick}>
+                {/* <Button id="loadGraph" variant="contained" color="primary" className={classes.button} onClick={handleLoadGraphsClick}>
                     Load Graphs File
                     <CloudUploadIcon className={classes.rightIcon} />
-                </Button>
-                {/* <Button variant="outlined" id="loadGraph" >Load Graphs File</Button> */}
-                {/* <br/> */}
+                </Button> */}
+                <button variant="outlined" id="loadGraph" onClick={handleLoadGraphsClick} >Load Graphs File</button> 
+               
                 </>
             )}
         </AppContext.Consumer>
