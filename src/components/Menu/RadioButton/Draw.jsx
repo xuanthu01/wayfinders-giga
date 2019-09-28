@@ -3,6 +3,7 @@ import _ from "lodash";
 import { drawEdge, showNodes, removeShortestPathEl, removeEdgeElement } from "../../../shared";
 import { AppContext } from '../../../contexts';
 export default function DrawRadioButton(props) {
+    
     const { graphs, isDrawedEdges, setDrawedEdge,
         removeRelationship, addVertexToGraphs
     } = useContext(AppContext);
@@ -33,10 +34,10 @@ export default function DrawRadioButton(props) {
             console.log("error in DrawRadioButton:", error);
         }
     }
-
+    console.log(isDrawedEdges);
     return (
         <AppContext.Consumer>
-            {({ setFeature, vertex1, vertex2, isDrawedEdges }) => (
+            {({ setFeature, vertex1, vertex2 }) => (
                 <>
                     <input type="radio" id="draw" onChange={() => {
                         removeShortestPathEl(vertex1, vertex2);

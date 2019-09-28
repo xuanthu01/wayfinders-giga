@@ -72,6 +72,7 @@ class SVGContainer extends Component {
             document.getElementById("loadGraph").removeAttribute("disabled");
             showNodes();
             this.drawEdgeFromGraphs(false,undefined);
+            // setFeature("find");
         } catch (error) {
             console.log("handleSVG failed:", error);
         }
@@ -163,22 +164,6 @@ class SVGContainer extends Component {
         nodes.replaceWith(node_pathline_clone);
         node_pathline.replaceWith(nodes_clone);
     }
-    deleteEgdes = async (edge, vertex1Id, vertex2Id) => {
-        const { feature, removeRelationship } = this.context;
-        if (feature === "delete" && typeof edge !== "string") {
-            edge.parentElement.removeChild(edge);
-        }
-        else if (typeof edge === "string") {
-            const edgeId = edge;
-            let edgeEl = document.getElementById(edgeId);
-            if (!edgeEl) {
-                const tryEdgeId = edgeId.split(':').reverse().join(':');
-                edgeEl = document.getElementById(tryEdgeId);
-            }
-            edgeEl.parentElement.removeChild(edgeEl);
-        }
-        await removeRelationship(vertex1Id, vertex2Id);
-    };
     /*XỬ LÍ SỰ KIÊN KHI CLICK TRÊN SVG, DRAW EGDE- DRAW SHORTEST PATH */
     handleMouseClick(e, floorId) {
         try {
@@ -276,12 +261,18 @@ class SVGContainer extends Component {
         return this.state.listSvgArrState !== nextState.listSvgArrState;
         // return false;
     }
-    deleteEgdes = async (edge, vertex1Id, vertex2Id) => {
+    deleteEgdes = async (edge, vertex1Id, vertex2Id) => { 
         const  {removeRelationship} = this.context;
-        removeEdgeElement(edge);
-        await removeRelationship(vertex1Id, vertex2Id);
+        try{
+            removeEdgeElement(edge);
+            await removeRelationship(vertex1Id, vertex2Id);
+        }
+        catch (error){
+            console.log("deleteEgdes error",error);
+        }
     };
     drawEdgeFromGraphs = (isDrawedEdges,floorId) => {
+        // console.log("drawEdgeFromGraphs");
         const {setDrawedEdge,addVertexToGraphs,graphs} = this.context;
         try {
             if (isDrawedEdges) return;

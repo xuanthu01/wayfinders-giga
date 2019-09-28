@@ -19,7 +19,7 @@ class LoadSVGButton extends Component {
     onFilesChange = async (files) => {
         // let {numberOfMap,startIndex} = this.state;
         const { setStartIndex, getSVGContent } = this.context;
-        console.log(this.context);
+        // console.log(this.context);
 
         const { numberOfMap } = this.state;
         const arrUrlSvg = [];

@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component,Suspense } from 'react';
 import { AppProvider, AppContext } from '../contexts';
 import { WayFindRadioButton, DrawRadioButton } from './Menu/RadioButton';
-import { LoadSVGButton, LoadGraphButton,SaveGraphButton } from './Menu/Button';
+import { LoadGraphButton,SaveGraphButton } from './Menu/Button';
 import RelationshipTable from './RelationshipTable';
-import SVGContainer from './Containers/SVGContainer';
+// import SVGContainer from './Containers/SVGContainer';
 import { SVGProvider } from '../contexts/svg.context';
+const SVGContainer = React.lazy(() => import('./Containers/SVGContainer'));
+const LoadSVGButton = React.lazy(() => import('./Menu/Button/LoadSVG'));
 class Wayfinders extends Component {
     static contextType = AppContext;
     render() {
@@ -19,10 +21,13 @@ class Wayfinders extends Component {
                     </div>
                     <div className="svg-zone" style={{ textAlign: "center" }}>
                         <SVGProvider>
-                            <LoadSVGButton />
-                            <div className="svg-container" style={{ textAlign: "center" }}>
-                                <SVGContainer />
-                            </div>
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <LoadSVGButton />
+                                <div className="svg-container" style={{ textAlign: "center" }}>
+                                    <SVGContainer />
+                                </div>
+                            </Suspense>
+                            
                         </SVGProvider>
 
                     </div>
