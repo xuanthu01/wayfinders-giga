@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import _ from "lodash";
 import { drawEdge, showNodes, removeShortestPathEl, removeEdgeElement } from "../../../shared";
 import { AppContext } from '../../../contexts';
+import Radio from '@material-ui/core/Radio';
 export default function DrawRadioButton(props) {
     
     const { graphs, isDrawedEdges, setDrawedEdge,
@@ -45,6 +46,16 @@ export default function DrawRadioButton(props) {
                         showNodes();
                         drawEdgeFromGraphs(isDrawedEdges);
                     }} name="chooseFeature" />DRAW <br />
+                    {/* <Radio    
+                        onChange={() => {
+                            removeShortestPathEl(vertex1, vertex2);
+                            setFeature("draw");
+                            showNodes();
+                            drawEdgeFromGraphs(isDrawedEdges);
+                        }}           
+                        name="chooseFeature"
+                        
+                    />DRAW <br /> */}
                 </>
             )}
         </AppContext.Consumer>

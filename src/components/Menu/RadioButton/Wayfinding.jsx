@@ -85,6 +85,7 @@ class WayFindRadioButton extends React.Component {
                             // showNodes(true);
                             // hideEdges();
                         }} name="chooseFeature" />Way Finding <br />
+                        
                         <If condition={feature === "find"} component={VertextureComponent} />
                     </>
                 )}
