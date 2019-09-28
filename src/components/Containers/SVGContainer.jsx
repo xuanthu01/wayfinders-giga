@@ -5,8 +5,7 @@ import _ from "lodash";
 import { drawShortestPath, } from "../../helpers";
 import { drawEdge, highLightNodeEl, removeShortestPathEl, showNodes,removeEdgeElement } from "../../shared"
 import CombinedCtxProvider, { CombinedContext } from '../../contexts/combined.context';
-import SweetAlert from "react-bootstrap-sweetalert";
-import CircularProgress from '@material-ui/core/CircularProgress';
+
 // import { isFulfilled } from 'q';
 class SVGContainer extends Component {
     constructor(props) {
@@ -21,36 +20,18 @@ class SVGContainer extends Component {
         }
     }
     static contextType = CombinedContext;
-    autoCloseAlert=()=> {
-       
-        this.setState({
-          alert: (
-            <SweetAlert
-              style={{ display: "block", marginTop: "-100px" }}
-              title="Vui lòng chờ "
-              onConfirm={() => this.hideAlert()}
-              showConfirm={false}
-            >
-              <CircularProgress color="secondary" />
-            </SweetAlert>
-          )
-        });
-        setTimeout(this.hideAlert, 5000);
-      }
-    hideAlert=()=> {
-    this.setState({
-        alert: null
-    });
-    }
+   
     handleSVG = async (src, hasCache) => {
         try {
-            // this.autoCloseAlert();
-            const { startIndex, isLoading, listSVGArray,setFeature } = this.context;
+            
+            const { startIndex, isLoading, listSVGArray,setFeature ,setWaiting,waitForLoading} = this.context;
             let index = startIndex;
             let listsvg = document.getElementsByTagName("svg");
             let notFinishLoad = listsvg.length < listSVGArray.length;
             if (notFinishLoad === true) {
-                console.log(document.getElementById("loadGraph"));
+                if(waitForLoading === true)
+                    return ;
+                setWaiting(true);
                 document.getElementById("loadGraph").setAttribute("disabled",true);
                 return;
             }
@@ -59,7 +40,7 @@ class SVGContainer extends Component {
             if (isLoading === false) {
                 
                 for (let i = 0; i < listSVGArray.length; i++) {
-                    
+                     
                     let floorId = listsvg[i].getElementById("background").parentElement.attributes.id.value;
                     let nodes = listsvg[i].getElementById("node");
                     
@@ -77,10 +58,11 @@ class SVGContainer extends Component {
                 return;
             }
             for (let i = index - this.state.numDeleted; i < listSVGArray.length; i++) {
-                console.log(listsvg[i].getElementById("background"));
+                console.log(listsvg[i]);   
+                console.log(listsvg[i].getElementById("background"));  
                 let floorId = listsvg[i].getElementById("background").parentElement.attributes.id.value;
-                
                 listsvg[i].setAttribute("id", `svg-${floorId}`);
+                console.log(floorId,listsvg[i]);
                 this.createNode_Pathline(listsvg[i], floorId);
                 this.addClickEventForCircle(floorId);
                 this.addEventMouse();
@@ -98,7 +80,7 @@ class SVGContainer extends Component {
             document.getElementById("loadGraph").removeAttribute("disabled");
             showNodes();
             this.drawEdgeFromGraphs(false,undefined);
-            
+            setWaiting(false);
             
         } catch (error) {
             console.log("handleSVG failed:", error);
@@ -351,19 +333,23 @@ class SVGContainer extends Component {
         }
     }
     render() {
-        // console.log("SVGContainer");
+        
         const { listSVGArray } = this.context;
+        // console.log(listSVGArray);
         return (    
             <div id="list-svg">
-                {this.state.alert}
+                
                 {listSVGArray ? listSVGArray.map((value, i) => (
+                       
                     <ReactSVG
                         key={`svg-${i}`}
                         src={value}
+                        loader={()=><p>Loading</p>}
                         onLoad={(src, hasCache) => this.handleSVG(src, hasCache)}
                         preProcessor={code => code}
                         cacheRequests={false}
                     />
+                   
                 )) : null}
             </div>
         )

@@ -35,7 +35,7 @@ export default function DrawRadioButton(props) {
             console.log("error in DrawRadioButton:", error);
         }
     }
-    console.log(isDrawedEdges);
+    // console.log(isDrawedEdges);
     return (
         <AppContext.Consumer>
             {({ setFeature, vertex1, vertex2 }) => (

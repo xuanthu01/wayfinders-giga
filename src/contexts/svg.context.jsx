@@ -4,10 +4,14 @@ export class SVGProvider extends Component {
     state = {
         startIndex: 0,
         isLoading: false,
-        listSVGArray: []
+        listSVGArray: [],
+        waitForLoading : false
+    }
+    setWaiting = (param)=>{
+        this.setState({waitForLoading :param});
     }
     setStartIndex = async index => {
-        console.log(index, "setStartIndex");
+        // console.log(index, "setStartIndex");
         return await this.setStateAsync({ startIndex: index });
     }
     setIsLoading = isLoading => {
@@ -17,8 +21,12 @@ export class SVGProvider extends Component {
      * @param {Array} SVGUrl
      */
     getSVGContent = async (SVGUrl) => {
-        for (let i = 0; i < SVGUrl.length; i++)
-            await this.setStateAsync({ listSVGArray: [...this.state.listSVGArray, SVGUrl[i]] });
+        let cloneListSVGArray = [...this.state.listSVGArray];
+        let newState = cloneListSVGArray.concat(SVGUrl);
+        // console.log(newState);
+        // for (let i = 0; i < SVGUrl.length; i++)
+        //     await this.setStateAsync({ listSVGArray: [...this.state.listSVGArray, SVGUrl[i]] });
+        this.setState({listSVGArray:newState})
         this.setIsLoading(true);
     }
     AdjustNumberOfMap = async (index) => {
@@ -39,7 +47,8 @@ export class SVGProvider extends Component {
                 setIsLoading: this.setIsLoading,
                 setStartIndex: this.setStartIndex,
                 getSVGContent: this.getSVGContent,
-                AdjustNumberOfMap: this.AdjustNumberOfMap
+                AdjustNumberOfMap: this.AdjustNumberOfMap,
+                setWaiting :this.setWaiting
             }}>
                 {this.props.children}
             </SVGContext.Provider>
