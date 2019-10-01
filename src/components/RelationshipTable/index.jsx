@@ -113,7 +113,7 @@ class RelationshipTable extends React.Component {
         return columns;
     }
     shouldComponentUpdate() {
-
+    
     }
     render() {
         console.log("RelationshipTable");

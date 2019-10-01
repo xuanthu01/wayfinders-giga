@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import ReactSVG from 'react-inlinesvg';
 import _ from "lodash";
-// import _ from 'lodash';
 import { drawShortestPath, } from "../../helpers";
 import { drawEdge, highLightNodeEl, removeShortestPathEl, showNodes,removeEdgeElement,showNodeInfo,hideNodeInfo } from "../../shared"
 import CombinedCtxProvider, { CombinedContext } from '../../contexts/combined.context';
-// import { isFulfilled } from 'q';
 class SVGContainer extends Component {
     constructor(props) {
         super(props);
@@ -110,8 +108,6 @@ class SVGContainer extends Component {
             });
         });
     }
-    
-    
     addMenuForMap = (floorId) => {
         let divMenuOfMap = document.createElement("div");
         divMenuOfMap.setAttribute("class", "menuOfMap");
@@ -148,7 +144,6 @@ class SVGContainer extends Component {
         nodes.replaceWith(node_pathline_clone);
         node_pathline.replaceWith(nodes_clone);
     }
-    
     /*MENU CHO MAP KHI LOAD MAP LÊN */
     DeleteMap = (floorId) => {
         try{
@@ -179,7 +174,6 @@ class SVGContainer extends Component {
         let svg = document.getElementById(`svg-${floorId}`);
         svg.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
     }
-
     /*XỬ LÍ SỰ KIÊN KHI CLICK TRÊN SVG, DRAW EGDE- DRAW SHORTEST PATH */
     handleMouseClick(e, floorId) {
         try {
@@ -194,12 +188,12 @@ class SVGContainer extends Component {
             if (feature === "draw") {
                 if (clickTarget.nodeName === "circle") {
                     if (!this.isDrawingEdge) {
-                        this.setState({ edgeVertex1: clickTarget });
+                        this.setState({ vertex1State: clickTarget });
                         this.isDrawingEdge = true;
-                    } else if (clickTarget !== this.state.edgeVertex1) {
-                        this.setState({ edgeVertex2: clickTarget });
-                        drawEdge(this.state.edgeVertex1, this.state.edgeVertex2, floorId, this.deleteEgdes, addVertexToGraphs);
-                        this.setState({ edgeVertex1: null, edgeVertex2: null });
+                    } else if (clickTarget !== this.state.vertex1State) {
+                        this.setState({ vertex2State: clickTarget });
+                        drawEdge(this.state.vertex1State, this.state.vertex2State, floorId, this.deleteEgdes, addVertexToGraphs);
+                        this.setState({ vertex1State: null, vertex2State: null });
                         this.isDrawingEdge = false;
                     }
                 }
@@ -278,6 +272,7 @@ class SVGContainer extends Component {
                         
                     }   
                     else  {
+    
                         for(let i = 0 ;i<this.state.listIdOfMap.length;i++)
                         {
                             let nodePathEl = document.getElementById(`node-pathline-${this.state.listIdOfMap[i]}`);
@@ -287,18 +282,12 @@ class SVGContainer extends Component {
                                     if (_.findIndex(array, { 'node': nodeNeighborId, 'neighbor': nodeId }) === -1) {
                                         array.push({ 'node': nodeId, 'neighbor': nodeNeighborId });
                                     }
-
                             }
-                        }
-                            
-                                
+                        }                                       
                     }
-                        
-
                 });
             });
             array.forEach(async item => {
-
                     if (item.node.substring(0, 2) === item.neighbor.substring(0, 2))
                         await drawEdge(item.node, item.neighbor, item.node.substring(0, 2), this.deleteEgdes, addVertexToGraphs);
 
@@ -312,7 +301,7 @@ class SVGContainer extends Component {
     }
     render() { 
         const { listSVGArray } = this.context;
-        // console.log("SVGContainer");
+        console.log("SVGContainer");
         return (    
             <div id="list-svg">          
                 {listSVGArray ? listSVGArray.map((value, i) => (                  

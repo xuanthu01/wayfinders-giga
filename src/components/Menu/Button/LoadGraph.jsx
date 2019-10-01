@@ -20,6 +20,7 @@ export default function LoadGraphButton(props) {
         },
       }));
     const classes = useStyles();
+    console.log(useContext(AppContext));
     const { handleGraphsFileUpload } = useContext(AppContext);
     const handleLoadGraphsClick = async () => {
         // console.log(document.getElementsByClassName("menuOfMap").length !== );
