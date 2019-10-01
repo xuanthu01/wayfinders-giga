@@ -1,26 +1,26 @@
 import React, { useContext } from 'react'
 import { AppContext } from '../../../contexts/app.context';
 // import { Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 // import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 export default function LoadGraphButton(props) {
     // console.log("LoadGraphButton");
-    const useStyles = makeStyles(theme => ({
-        button: {
-          margin: theme.spacing(1),
-        },
-        leftIcon: {
-          marginRight: theme.spacing(1),
-        },
-        rightIcon: {
-          marginLeft: theme.spacing(1),
-        },
-        iconSmall: {
-          fontSize: 20,
-        },
-      }));
-    const classes = useStyles();
-    console.log(useContext(AppContext));
+    // const useStyles = makeStyles(theme => ({
+    //     button: {
+    //       margin: theme.spacing(1),
+    //     },
+    //     leftIcon: {
+    //       marginRight: theme.spacing(1),
+    //     },
+    //     rightIcon: {
+    //       marginLeft: theme.spacing(1),
+    //     },
+    //     iconSmall: {
+    //       fontSize: 20,
+    //     },
+    //   }));
+    // const classes = useStyles();
+    // console.log(useContext(AppContext));
     const { handleGraphsFileUpload } = useContext(AppContext);
     const handleLoadGraphsClick = async () => {
         // console.log(document.getElementsByClassName("menuOfMap").length !== );

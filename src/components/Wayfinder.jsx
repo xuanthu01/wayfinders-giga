@@ -1,5 +1,5 @@
 import React, { Component,Suspense } from 'react';
-import { AppProvider, AppContext } from '../contexts';
+import { AppProvider} from '../contexts';
 import { WayFindRadioButton, DrawRadioButton } from './Menu/RadioButton';
 import { LoadGraphButton,SaveGraphButton ,LoadSVGButton} from './Menu/Button';
 import SVGContainer from './Containers/SVGContainer';

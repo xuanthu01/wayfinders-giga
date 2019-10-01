@@ -3,7 +3,7 @@ import { AppContext } from './app.context';
 import { SVGContext } from './svg.context';
 import { css } from '@emotion/core';
 import SweetAlert from "react-bootstrap-sweetalert";
-import CircularProgress from '@material-ui/core/CircularProgress';
+// import CircularProgress from '@material-ui/core/CircularProgress';
 import RingLoader from 'react-spinners/RingLoader';
 export const CombinedContext = React.createContext({});
 const CombinedCtxProvider = props => {

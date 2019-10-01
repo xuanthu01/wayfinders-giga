@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactTable from 'react-table';
 import { isEmpty, remove } from 'lodash';
-import { handleSaveRelationship, deserializeDataToGraphs, removeEdgeElement } from "../../shared";
+import { handleSaveRelationship,  removeEdgeElement } from "../../shared";
 import COLUMNS from './Columns';
 import 'react-table/react-table.css';
 import { AppContext } from '../../contexts';
 function ButtonFeature({ handleEditRelationship, handleSaveRelationship }) {
-    const styles = {
-        backgroundColor: '#dadada',
-        borderRadius: '2px'
-    }
+    // const styles = {
+    //     backgroundColor: '#dadada',
+    //     borderRadius: '2px'
+    // }
     return (
         <div style={{ textAlign: 'right' }}>
             <input type="checkbox" id="checkbox-editmode" /> Edit mode
@@ -22,7 +22,7 @@ class RelationshipTable extends React.Component {
     static contextType = AppContext;
     handleRemoveNeighbor = async (node, neighbor) => {
         try {
-            const { data, graphs, removeNeighborOfNode } = this.context;
+            const { data, removeNeighborOfNode } = this.context;
             data.forEach(async item => {
                 //tìm node để xóa neighbor & tìm neighbor để xóa node 
                 if (item.node === node) {
@@ -112,9 +112,7 @@ class RelationshipTable extends React.Component {
         ];
         return columns;
     }
-    shouldComponentUpdate() {
-    
-    }
+
     render() {
         console.log("RelationshipTable");
         return (

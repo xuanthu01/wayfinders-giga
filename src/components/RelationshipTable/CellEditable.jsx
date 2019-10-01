@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { If } from  "../../shared";
+// import { If } from  "../../shared";
 import { Cell } from './Cell';
 
 const CellEdit = ({ data, neighbor, propertyToEdit, onChangeData }) => {

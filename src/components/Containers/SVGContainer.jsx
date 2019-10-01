@@ -2,26 +2,23 @@ import React, { Component } from 'react'
 import ReactSVG from 'react-inlinesvg';
 import _ from "lodash";
 import { drawShortestPath, } from "../../helpers";
-import { drawEdge, highLightNodeEl, removeShortestPathEl, showNodes,removeEdgeElement,showNodeInfo,hideNodeInfo } from "../../shared"
+import { drawEdge, removeShortestPathEl, showNodes,removeEdgeElement,createNode_Pathline,addEventMouse } from "../../shared"
 import CombinedCtxProvider, { CombinedContext } from '../../contexts/combined.context';
 class SVGContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
             listIdOfMap: [],
-            listSvgArrState: [],
             vertex1State: "",
             vertex2State: "",
             numDeleted: 0,
-            alert : null,
         }
     }
     static contextType = CombinedContext;
    
     handleSVG = async (src, hasCache) => {
-        try {
-            
-            const { startIndex, isLoading, listSVGArray,setFeature ,setWaiting,waitForLoading} = this.context;
+        try {      
+            const { startIndex, isLoading, listSVGArray ,setWaiting,waitForLoading} = this.context;
             let index = startIndex;
             let listsvg = document.getElementsByTagName("svg");
             let notFinishLoad = listsvg.length < listSVGArray.length;
@@ -32,18 +29,14 @@ class SVGContainer extends Component {
                 document.getElementById("loadGraph").setAttribute("disabled",true);
                 return;
             }
-           
-            
-            if (isLoading === false) {
-                
-                for (let i = 0; i < listSVGArray.length; i++) {
-                     
+              
+            if (isLoading === false) {      
+                for (let i = 0; i < listSVGArray.length; i++) {          
                     let floorId = listsvg[i].getElementById("background").parentElement.attributes.id.value;
-                    let nodes = listsvg[i].getElementById("node");
-                    
+                    let nodes = listsvg[i].getElementById("node");           
                     if (nodes) {
                         listsvg[i].setAttribute("id", `svg-${floorId}`);
-                        this.createNode_Pathline(listsvg[i], floorId);
+                        createNode_Pathline(listsvg[i], floorId);
                         this.addClickEventForCircle(floorId);
                         showNodes();
                         // console.log(listsvg[i].getElementById(`node-pathline-${floorId}`).childNodes.length );
@@ -58,9 +51,9 @@ class SVGContainer extends Component {
             for (let i = index - this.state.numDeleted; i < listSVGArray.length; i++) {
                 let floorId = listsvg[i].getElementById("background").parentElement.attributes.id.value;
                 listsvg[i].setAttribute("id", `svg-${floorId}`);
-                this.createNode_Pathline(listsvg[i], floorId);
+                createNode_Pathline(listsvg[i], floorId);
                 this.addClickEventForCircle(floorId);
-                this.addEventMouse();
+                addEventMouse();
                 this.addMenuForMap(floorId);
                 await this.setStateAsync({ listIdOfMap: [...this.state.listIdOfMap, floorId] });
             }
@@ -72,8 +65,7 @@ class SVGContainer extends Component {
             document.getElementById("loadGraph").removeAttribute("disabled");
             showNodes();
             this.drawEdgeFromGraphs(false,undefined);
-            setWaiting(false);
-            
+            setWaiting(false);       
         } catch (error) {
             console.log("handleSVG failed:", error);
         }
@@ -93,21 +85,6 @@ class SVGContainer extends Component {
             });
         }
     };
-    addEventMouse = () => {
-        const nodes = document.querySelectorAll("circle");
-        nodes.forEach(node => {
-            node.addEventListener("mouseover", e => {
-                if (!e.target.id.includes("PATH")) {
-                    showNodeInfo(e.target);
-                    // highLightNodeEl(e.target.id, 500, false);
-                }
-            });
-            node.addEventListener("mouseout", e => {
-                if (!e.target.id.includes("PATH"))
-                    hideNodeInfo(e.target);
-            });
-        });
-    }
     addMenuForMap = (floorId) => {
         let divMenuOfMap = document.createElement("div");
         divMenuOfMap.setAttribute("class", "menuOfMap");
@@ -128,21 +105,6 @@ class SVGContainer extends Component {
         divMenuOfMap.appendChild(nameOfMap);
         divMenuOfMap.appendChild(button);
         divMenuOfMap.appendChild(space);
-    }
-    createNode_Pathline =  (svgElement, floorId) => {
-        let node_pathline = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        node_pathline.setAttributeNS(null, "id", `node-pathline-${floorId}`);
-        let nodes = svgElement.getElementById("node");
-        if (!nodes) {
-            alert("No nodes found");
-            return;
-        }
-        nodes.setAttribute("id", `node-${floorId}`);
-        nodes.parentElement.appendChild(node_pathline);
-        let node_pathline_clone = node_pathline.cloneNode(true);
-        let nodes_clone = nodes.cloneNode(true);
-        nodes.replaceWith(node_pathline_clone);
-        node_pathline.replaceWith(nodes_clone);
     }
     /*MENU CHO MAP KHI LOAD MAP LÊN */
     DeleteMap = (floorId) => {
@@ -231,16 +193,11 @@ class SVGContainer extends Component {
             console.log("error in handleMouseClick:", error);
 
         }
-
     }
     setStateAsync(state) {
         return new Promise((resolve) => {
             this.setState(state, resolve)
         });
-    }
-    shouldComponentUpdate(nextProps, nextState) {
-        return this.state.listSvgArrState !== nextState.listSvgArrState;
-        // return false;
     }
     deleteEgdes = async (edge, vertex1Id, vertex2Id) => { 
         const  {removeRelationship} = this.context;
@@ -253,14 +210,12 @@ class SVGContainer extends Component {
         }
     };
     drawEdgeFromGraphs = (isDrawedEdges,floorId) => {
-        // console.log("drawEdgeFromGraphs");
         const {setDrawedEdge,addVertexToGraphs,graphs} = this.context;
         try {
             if (isDrawedEdges) return;
             const array = [];
             Object.keys(graphs).forEach(nodeId => {
                 Object.keys(graphs[nodeId]).forEach(nodeNeighborId => {
-                    // console.log(floorId);
                     if(floorId !== undefined)
                     {
                         if(floorId === nodeNeighborId.substring(0,2) || floorId === nodeId.substring(0,2) )
@@ -271,8 +226,7 @@ class SVGContainer extends Component {
                         }
                         
                     }   
-                    else  {
-    
+                    else  {  
                         for(let i = 0 ;i<this.state.listIdOfMap.length;i++)
                         {
                             let nodePathEl = document.getElementById(`node-pathline-${this.state.listIdOfMap[i]}`);
@@ -298,6 +252,9 @@ class SVGContainer extends Component {
         } catch (error) {
             console.log("error in drawEdgeFromGraphs:", error);
         }
+    }
+    shouldComponentUpdate(nextProps, nextState){
+        return  this.state.listIdOfMap !== nextState.listIdOfMap;
     }
     render() { 
         const { listSVGArray } = this.context;
