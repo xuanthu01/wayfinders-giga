@@ -83,8 +83,8 @@ class WayFindRadioButton extends React.Component {
                         <input type="radio" id="way-Finding" onChange={() => {
                             // setDrawedEdge(false);
                             setFeature("find");
-                            // showNodes(true);
-                            // hideEdges();
+                            showNodes(true);
+                            hideEdges();
                         }} name="chooseFeature" />Way Finding <br />
                         
                         <If condition={feature === "find"} component={VertextureComponent} />
