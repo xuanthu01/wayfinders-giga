@@ -75,6 +75,12 @@ export default class AppProvider extends Component {
     // setStartIndex = (index) => {
     //     return this.setState({ startIndex: index });
     // }
+    // shouldComponentUpdate(nextProps,nextState){
+    //     if(this.state.data.length === nextState.data.length || this.state.feature === nextState.feature )
+    //         if(this.state.shortestPath.length !== next)
+    //         return false;
+    //     return true;    
+    // }
     render() {
         return (
             <AppContext.Provider value={{

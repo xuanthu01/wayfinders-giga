@@ -1,5 +1,5 @@
 import React from 'react'
-import { If, removeShortestPathEl, showNodes, hideEdges } from "../../../shared";
+import { If, removeShortestPathEl } from "../../../shared";
 import { drawShortestPath } from "../../../helpers";
 import { useState, useContext } from 'react';
 import { AppContext } from '../../../contexts/app.context';
@@ -8,7 +8,7 @@ const PathStep = ({ step, index }) => {
     return `Step ${index} : ${step[0].join("=>").toString()}`;
 }
 const VertextureComponent = (props) => {
-    const { vertex1, vertex2, setVertex, route, shortestPath, setShortestPath, feature } = useContext(AppContext);
+    const { vertex1, vertex2, setVertex, route, shortestPath, setShortestPath } = useContext(AppContext);
     const _drawShorestPath = () => {
         let shortestPath = document.getElementsByClassName("noAnimation-path");
         let isExist = shortestPath.length;
@@ -36,21 +36,17 @@ const VertextureComponent = (props) => {
     }
     const [oldVertex1, setOldVertex1] = useState('');
     const [oldVertex2, setOldVertex2] = useState('');
-    const [v1, setInputVertex1] = useState('');
-    const [v2, setInputVertex2] = useState('');
+    // const [v1, setInputVertex1] = useState('');
+    // const [v2, setInputVertex2] = useState('');
 
     let result;
     if (shortestPath)
         result = Object.keys(shortestPath).map(key => [shortestPath[key]]);
     return (
         <div>
-            <input type="text" id="first-vertex" onBlur={e => {
-                setInputVertex1(e.target.value);
-            }} />
+            <input type="text" id="first-vertex"  />
             <span>  </span>
-            <input type="text" id="second-vertex" onBlur={e => {
-                setInputVertex2(e.target.value);
-            }} />
+            <input type="text" id="second-vertex"  />
             <span>  </span>
             <button onClick={_drawShorestPath}>Find</button> <br />
             <div id="node-pathline-list" style={{ whiteSpace: "nowrap", overflow: "auto" }}>

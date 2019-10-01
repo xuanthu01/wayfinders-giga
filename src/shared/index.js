@@ -293,30 +293,38 @@ const hideNodeInfo = (node) => {
         console.log("hideNodeInfo failed:", error);
     }
 }
-const addMenuForMap = (floorId) => {
-    let divMenuOfMap = document.createElement("div");
-    divMenuOfMap.setAttribute("class", "menuOfMap");
-    document.getElementsByClassName("svg-container")[0].appendChild(divMenuOfMap);
-    let radio = document.createElement("input");
-    radio.setAttribute("type", "radio");
-    radio.setAttribute("name", "radioGroup");
-    radio.setAttribute("id", `radio-${floorId}`);
-    radio.addEventListener("change", () => { this.scrollMap(floorId) });
-    let nameOfMap = document.createElement("span");
-    nameOfMap.innerHTML = `${floorId}`;
-    let button = document.createElement("button");
-    button.addEventListener("click", () => { this.DeleteMap(floorId) });
-    button.textContent = "Delete";
-    let space = document.createElement("span");
-    space.innerText = `     `;
-    divMenuOfMap.appendChild(radio);
-    divMenuOfMap.appendChild(nameOfMap);
-    divMenuOfMap.appendChild(button);
-    divMenuOfMap.appendChild(space);
+const  createNode_Pathline =  (svgElement, floorId) => {
+    let node_pathline = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    node_pathline.setAttributeNS(null, "id", `node-pathline-${floorId}`);
+    let nodes = svgElement.getElementById("node");
+    if (!nodes) {
+        alert("No nodes found");
+        return;
+    }
+    nodes.setAttribute("id", `node-${floorId}`);
+    nodes.parentElement.appendChild(node_pathline);
+    let node_pathline_clone = node_pathline.cloneNode(true);
+    let nodes_clone = nodes.cloneNode(true);
+    nodes.replaceWith(node_pathline_clone);
+    node_pathline.replaceWith(nodes_clone);
+}
+const addEventMouse = () => {
+    const nodes = document.querySelectorAll("circle");
+    nodes.forEach(node => {
+        node.addEventListener("mouseover", e => {
+            if (!e.target.id.includes("PATH")) {
+                showNodeInfo(e.target);
+            }
+        });
+        node.addEventListener("mouseout", e => {
+            if (!e.target.id.includes("PATH"))
+                hideNodeInfo(e.target);
+        });
+    });
 }
 export {
     If, drawEdge, handleSaveRelationship,
     deserializeDataToGraphs, hideNodes, showNodes,
     showEdges, hideEdges, removeShortestPathEl,
-    highLightNodeEl, removeEdgeElement,showNodeInfo,hideNodeInfo,addMenuForMap
+    highLightNodeEl, removeEdgeElement,showNodeInfo,hideNodeInfo,createNode_Pathline,addEventMouse
 }
