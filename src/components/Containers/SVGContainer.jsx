@@ -3,9 +3,8 @@ import ReactSVG from 'react-inlinesvg';
 import _ from "lodash";
 // import _ from 'lodash';
 import { drawShortestPath, } from "../../helpers";
-import { drawEdge, highLightNodeEl, removeShortestPathEl, showNodes,removeEdgeElement } from "../../shared"
+import { drawEdge, highLightNodeEl, removeShortestPathEl, showNodes,removeEdgeElement,showNodeInfo,hideNodeInfo } from "../../shared"
 import CombinedCtxProvider, { CombinedContext } from '../../contexts/combined.context';
-
 // import { isFulfilled } from 'q';
 class SVGContainer extends Component {
     constructor(props) {
@@ -59,11 +58,8 @@ class SVGContainer extends Component {
                 return;
             }
             for (let i = index - this.state.numDeleted; i < listSVGArray.length; i++) {
-                // console.log(listsvg[i]);   
-                // console.log(listsvg[i].getElementById("background"));  
                 let floorId = listsvg[i].getElementById("background").parentElement.attributes.id.value;
                 listsvg[i].setAttribute("id", `svg-${floorId}`);
-                // console.log(floorId,listsvg[i]);
                 this.createNode_Pathline(listsvg[i], floorId);
                 this.addClickEventForCircle(floorId);
                 this.addEventMouse();
@@ -74,10 +70,7 @@ class SVGContainer extends Component {
             circlesYAH.forEach(circleNode => {
                 const floorId = circleNode.id.substring(0, 2);
                 this.addClickEventForCirclesYAH(circleNode, floorId);
-            });
-            // if(this.context.feature === "find")
-            //     showNodes(true);
-            // else if(this.context.feature === "draw")   
+            }); 
             document.getElementById("loadGraph").removeAttribute("disabled");
             showNodes();
             this.drawEdgeFromGraphs(false,undefined);
@@ -107,37 +100,18 @@ class SVGContainer extends Component {
         nodes.forEach(node => {
             node.addEventListener("mouseover", e => {
                 if (!e.target.id.includes("PATH")) {
-                    this.showNodeInfo(e.target);
+                    showNodeInfo(e.target);
                     // highLightNodeEl(e.target.id, 500, false);
                 }
             });
             node.addEventListener("mouseout", e => {
                 if (!e.target.id.includes("PATH"))
-                    this.hideNodeInfo(e.target);
+                    hideNodeInfo(e.target);
             });
         });
     }
-    showNodeInfo = (node) => {
-        try {
-            let tooltip = document.createElementNS("http://www.w3.org/2000/svg", "text");
-            tooltip.setAttributeNS(null, "x", node.attributes.cx.value - 40);
-            tooltip.setAttributeNS(null, "y", node.attributes.cy.value - 15);
-            tooltip.setAttributeNS(null, "fill", "black");
-            // console.log(tooltip);
-            tooltip.innerHTML = node.id
-            node.parentElement.appendChild(tooltip);
-        } catch (error) {
-            console.log("showNodeInfo failed:", error);
-        }
-    }
-    hideNodeInfo = (node) => {
-        try {
-            let nodeEl = document.getElementById(node.id);
-            nodeEl.parentElement.removeChild(nodeEl.parentElement.lastChild);
-        } catch (error) {
-            console.log("hideNodeInfo failed:", error);
-        }
-    }
+    
+    
     addMenuForMap = (floorId) => {
         let divMenuOfMap = document.createElement("div");
         divMenuOfMap.setAttribute("class", "menuOfMap");
@@ -174,6 +148,38 @@ class SVGContainer extends Component {
         nodes.replaceWith(node_pathline_clone);
         node_pathline.replaceWith(nodes_clone);
     }
+    
+    /*MENU CHO MAP KHI LOAD MAP LÊN */
+    DeleteMap = (floorId) => {
+        try{
+            const { AdjustNumberOfMap,setDrawedEdge } = this.context;
+            let radioElement = document.getElementById(`radio-${floorId}`);
+            document.getElementsByClassName("svg-container")[0].removeChild(radioElement.parentElement);
+            let deleteFileIndex;
+            const { listIdOfMap } = this.state;
+            for (let i = 0; i < listIdOfMap.length; i++) {
+                if (listIdOfMap[i] === floorId) {
+                    deleteFileIndex = i;
+                    break;
+                }
+            }
+            var cloneState = [...listIdOfMap];
+            cloneState.splice(deleteFileIndex, 1);
+            this.setState({ listIdOfMap: cloneState });
+            this.setState({ numDeleted: this.state.numDeleted + 1 })
+            AdjustNumberOfMap(deleteFileIndex);
+            setDrawedEdge(false);
+        }
+        catch (error) {
+            console.log("DeleteMap failed:", error);
+        }
+
+    }
+    scrollMap = (floorId) => {
+        let svg = document.getElementById(`svg-${floorId}`);
+        svg.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+    }
+
     /*XỬ LÍ SỰ KIÊN KHI CLICK TRÊN SVG, DRAW EGDE- DRAW SHORTEST PATH */
     handleMouseClick(e, floorId) {
         try {
@@ -183,6 +189,7 @@ class SVGContainer extends Component {
                 route, setShortestPath,
                 setVertex
             } = this.context;
+            // console.log(this.context);
             const clickTarget = e.target;
             if (feature === "draw") {
                 if (clickTarget.nodeName === "circle") {
@@ -231,36 +238,6 @@ class SVGContainer extends Component {
 
         }
 
-    }
-    /*MENU CHO MAP KHI LOAD MAP LÊN */
-    DeleteMap = (floorId) => {
-        try{
-            const { AdjustNumberOfMap,setDrawedEdge } = this.context;
-            let radioElement = document.getElementById(`radio-${floorId}`);
-            document.getElementsByClassName("svg-container")[0].removeChild(radioElement.parentElement);
-            let deleteFileIndex;
-            const { listIdOfMap } = this.state;
-            for (let i = 0; i < listIdOfMap.length; i++) {
-                if (listIdOfMap[i] === floorId) {
-                    deleteFileIndex = i;
-                    break;
-                }
-            }
-            var cloneState = [...listIdOfMap];
-            cloneState.splice(deleteFileIndex, 1);
-            this.setState({ listIdOfMap: cloneState });
-            this.setState({ numDeleted: this.state.numDeleted + 1 })
-            AdjustNumberOfMap(deleteFileIndex);
-            setDrawedEdge(false);
-        }
-        catch (error) {
-            console.log("DeleteMap failed:", error);
-        }
-
-    }
-    scrollMap = (floorId) => {
-        let svg = document.getElementById(`svg-${floorId}`);
-        svg.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
     }
     setStateAsync(state) {
         return new Promise((resolve) => {
@@ -333,15 +310,12 @@ class SVGContainer extends Component {
             console.log("error in drawEdgeFromGraphs:", error);
         }
     }
-    render() {
-        
+    render() { 
         const { listSVGArray } = this.context;
         // console.log("SVGContainer");
         return (    
-            <div id="list-svg">
-                
-                {listSVGArray ? listSVGArray.map((value, i) => (
-                       
+            <div id="list-svg">          
+                {listSVGArray ? listSVGArray.map((value, i) => (                  
                     <ReactSVG
                         key={`svg-${i}`}
                         src={value}

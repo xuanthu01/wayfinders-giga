@@ -272,9 +272,51 @@ const removeShortestPathEl = (idVertex1, idVertex2) => {
         pin_logo.parentElement.removeChild(pin_logo);
     }
 }
+const showNodeInfo = (node) => {
+    try {
+        let tooltip = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        tooltip.setAttributeNS(null, "x", node.attributes.cx.value - 40);
+        tooltip.setAttributeNS(null, "y", node.attributes.cy.value - 15);
+        tooltip.setAttributeNS(null, "fill", "black");
+        // console.log(tooltip);
+        tooltip.innerHTML = node.id
+        node.parentElement.appendChild(tooltip);
+    } catch (error) {
+        console.log("showNodeInfo failed:", error);
+    }
+}
+const hideNodeInfo = (node) => {
+    try {
+        let nodeEl = document.getElementById(node.id);
+        nodeEl.parentElement.removeChild(nodeEl.parentElement.lastChild);
+    } catch (error) {
+        console.log("hideNodeInfo failed:", error);
+    }
+}
+const addMenuForMap = (floorId) => {
+    let divMenuOfMap = document.createElement("div");
+    divMenuOfMap.setAttribute("class", "menuOfMap");
+    document.getElementsByClassName("svg-container")[0].appendChild(divMenuOfMap);
+    let radio = document.createElement("input");
+    radio.setAttribute("type", "radio");
+    radio.setAttribute("name", "radioGroup");
+    radio.setAttribute("id", `radio-${floorId}`);
+    radio.addEventListener("change", () => { this.scrollMap(floorId) });
+    let nameOfMap = document.createElement("span");
+    nameOfMap.innerHTML = `${floorId}`;
+    let button = document.createElement("button");
+    button.addEventListener("click", () => { this.DeleteMap(floorId) });
+    button.textContent = "Delete";
+    let space = document.createElement("span");
+    space.innerText = `     `;
+    divMenuOfMap.appendChild(radio);
+    divMenuOfMap.appendChild(nameOfMap);
+    divMenuOfMap.appendChild(button);
+    divMenuOfMap.appendChild(space);
+}
 export {
     If, drawEdge, handleSaveRelationship,
     deserializeDataToGraphs, hideNodes, showNodes,
     showEdges, hideEdges, removeShortestPathEl,
-    highLightNodeEl, removeEdgeElement
+    highLightNodeEl, removeEdgeElement,showNodeInfo,hideNodeInfo,addMenuForMap
 }

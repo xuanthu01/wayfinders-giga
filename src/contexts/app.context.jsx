@@ -14,7 +14,7 @@ export default class AppProvider extends Component {
         data: [],
         isDrawedEdges: false,
         shortestPath: [],
-        startIndex: 0
+        // startIndex: 0
     };
     setStateAsync = state => {
         return new Promise((resolve) => {
@@ -72,9 +72,9 @@ export default class AppProvider extends Component {
     setShortestPath = (path) => {
         return this.setState({ shortestPath: path });
     };
-    setStartIndex = (index) => {
-        return this.setState({ startIndex: index });
-    }
+    // setStartIndex = (index) => {
+    //     return this.setState({ startIndex: index });
+    // }
     render() {
         return (
             <AppContext.Provider value={{
@@ -88,7 +88,7 @@ export default class AppProvider extends Component {
                 removeRelationship: this.removeRelationship,
                 handleDataChange: this.handleDataChange,
                 addVertexToGraphs: this.addVertexToGraphs,
-                setStartIndex: this.setStartIndex,
+                // setStartIndex: this.setStartIndex,
                 removeNeighborOfNode: this.removeNeighborOfNode,
             }}>
                 {this.props.children}
