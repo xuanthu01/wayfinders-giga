@@ -16,7 +16,7 @@ const CombinedCtxProvider = props => {
                         </CombinedContext.Provider> 
                         {SVGCtx.waitForLoading === true ?   <SweetAlert
                             style={{ display: "block", marginTop: "-100px" }}
-                            title="Vui lòng chờ "
+                            title="Loading ... "
                             // onConfirm={() => this.hideAlert()}
                             showConfirm={false}
                             >

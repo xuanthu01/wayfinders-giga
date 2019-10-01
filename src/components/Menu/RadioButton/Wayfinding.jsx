@@ -27,7 +27,7 @@ const VertextureComponent = (props) => {
             return;
         }
         let pathArr = drawShortestPath(vertexInput1, vertexInput2, route);
-        console.log(pathArr)
+        // console.log(pathArr)
         if (pathArr === undefined || null)
             return null;
         setShortestPath(pathArr);
@@ -75,6 +75,7 @@ class WayFindRadioButton extends React.Component {
         return this.props.feature !== nextProps.feature
     }
     render() {
+        // console.log("WayFindRadioButton");
         return (
             <AppContext.Consumer>
                 {({ setFeature, setDrawedEdge, feature }) => (

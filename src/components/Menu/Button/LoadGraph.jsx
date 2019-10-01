@@ -4,6 +4,7 @@ import { AppContext } from '../../../contexts/app.context';
 import { makeStyles } from '@material-ui/core/styles';
 // import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 export default function LoadGraphButton(props) {
+    // console.log("LoadGraphButton");
     const useStyles = makeStyles(theme => ({
         button: {
           margin: theme.spacing(1),

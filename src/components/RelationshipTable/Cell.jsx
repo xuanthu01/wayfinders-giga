@@ -1,6 +1,7 @@
 import React from 'react';
 import { highLightNodeEl } from '../../shared';
 export const Cell = ({ node, neighbor, property, propertyToEdit, canEdit, onBlur }) => {
+    // console.log("Cell");
     if (typeof canEdit !== "boolean") canEdit = false;
     return (
         <div

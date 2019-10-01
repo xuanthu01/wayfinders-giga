@@ -53,16 +53,17 @@ class SVGContainer extends Component {
                         if(listsvg[i].getElementById(`node-pathline-${floorId}`).childNodes.length === 0 )
                         this.drawEdgeFromGraphs(false,floorId);
                         document.getElementById("loadGraph").removeAttribute("disabled");
+                        setWaiting(false);
                     }
                 }
                 return;
             }
             for (let i = index - this.state.numDeleted; i < listSVGArray.length; i++) {
-                console.log(listsvg[i]);   
-                console.log(listsvg[i].getElementById("background"));  
+                // console.log(listsvg[i]);   
+                // console.log(listsvg[i].getElementById("background"));  
                 let floorId = listsvg[i].getElementById("background").parentElement.attributes.id.value;
                 listsvg[i].setAttribute("id", `svg-${floorId}`);
-                console.log(floorId,listsvg[i]);
+                // console.log(floorId,listsvg[i]);
                 this.createNode_Pathline(listsvg[i], floorId);
                 this.addClickEventForCircle(floorId);
                 this.addEventMouse();
@@ -220,7 +221,7 @@ class SVGContainer extends Component {
                     this.setState({ vertex2State: e.target.id });
                     setVertex({ vertex1: this.state.vertex1State, vertex2: this.state.vertex2State });
                     let pathArrData = drawShortestPath(this.state.vertex1State, this.state.vertex2State, route);
-                    console.log("pathArrData:", pathArrData);
+                    // console.log("pathArrData:", pathArrData);
                     setShortestPath(pathArrData);
                     this.isFindingPath = false;
                 }
@@ -335,7 +336,7 @@ class SVGContainer extends Component {
     render() {
         
         const { listSVGArray } = this.context;
-        // console.log(listSVGArray);
+        // console.log("SVGContainer");
         return (    
             <div id="list-svg">
                 

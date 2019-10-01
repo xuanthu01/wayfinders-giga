@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 // import _ from "lodash";
 import Files from 'react-files';
 import { AppContext } from '../../../contexts/app.context';
@@ -19,6 +19,7 @@ class LoadSVGButton extends Component {
     onFilesChange = async (files) => {
         // let {numberOfMap,startIndex} = this.state;
         const { setStartIndex, getSVGContent } = this.context;
+    
         // console.log(this.context);
 
         const { numberOfMap } = this.state;

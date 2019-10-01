@@ -68,7 +68,7 @@ class RelationshipTable extends React.Component {
         }
     };
     handleAddRelationship = (node) => {
-        console.log("handleAddRelationship: ", node);
+        // console.log("handleAddRelationship: ", node);
         try {
             const { data, handleDataChange } = this.context;
             data.forEach(item => {

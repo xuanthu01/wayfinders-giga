@@ -1,11 +1,12 @@
 import React, { useContext } from 'react'
 import { handleSaveRelationship } from "../../../shared";
 import { AppContext } from '../../../contexts/app.context';
-import SaveIcon from '@material-ui/icons/Save';
-import { Button } from '@material-ui/core';
+// import SaveIcon from '@material-ui/icons/Save';
+// import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
+// import clsx from 'clsx';
 export default function SaveGraphButton() {
+    // console.log("SaveGraphButton");
     const { graphs } = useContext(AppContext);
     const useStyles = makeStyles(theme => ({
         button: {
