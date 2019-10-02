@@ -1,5 +1,5 @@
 import React from 'react'
-import { If, removeShortestPathEl } from "../../../shared";
+import { If, removeShortestPathEl, showNodes, hideEdges } from "../../../shared";
 import { drawShortestPath } from "../../../helpers";
 import { useState, useContext } from 'react';
 import { AppContext } from '../../../contexts/app.context';
@@ -42,26 +42,28 @@ const VertextureComponent = (props) => {
     let result;
     if (shortestPath)
         result = Object.keys(shortestPath).map(key => [shortestPath[key]]);
+    const listStep = result.map((step, index) => {
+        return <div key={index}>
+            <p>
+                <PathStep key={index} step={step} index={index + 1} />
+            </p>
+            <br />
+        </div>
+    });
     return (
         <div>
-            <input type="text" id="first-vertex"  />
+            <input type="text" id="first-vertex" />
             <span>  </span>
-            <input type="text" id="second-vertex"  />
+            <input type="text" id="second-vertex" />
             <span>  </span>
             <button onClick={_drawShorestPath}>Find</button> <br />
             <div id="node-pathline-list" style={{ whiteSpace: "nowrap", overflow: "auto" }}>
                 {
-                    result ? result.map((step, index) => {
-                        return <>
-                            <p>
-                                <PathStep key={index} step={step} index={index + 1} />
-                            </p>
-                            <br />
-                        </>
-                    }) : null
+                    result ? listStep.map(el => el) : null
                 }
             </div>
-        </div>)
+        </div>
+    )
 }
 class WayFindRadioButton extends React.Component {
     static contextType = AppContext;
@@ -82,8 +84,8 @@ class WayFindRadioButton extends React.Component {
                             showNodes(true);
                             hideEdges();
                         }} name="chooseFeature" />Way Finding <br />
-                        
-                        <If condition={feature === "find"} component={VertextureComponent} />
+
+                        <If condition={feature === "find"} component={VertextureComponent} props={{ key: `feature-${feature}` }} />
                     </>
                 )}
             </AppContext.Consumer>
