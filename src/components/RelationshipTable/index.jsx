@@ -31,6 +31,8 @@ const Table = React.memo(props => {
     )
 })
 const RelationshipTable = React.memo(({ data, removeNeighborOfNode, handleDataChange }) => {
+    console.log("React Relationship Table");
+    
     const handleRemoveNeighbor = async (node, neighbor) => {
         try {
             data.forEach(async item => {
@@ -123,6 +125,8 @@ const RelationshipTable = React.memo(({ data, removeNeighborOfNode, handleDataCh
     return <Table data={data} getColumns={getColumns} />
 });
 const WrappedTable = (props) => {
+    console.log("wrapped table");
+    
     return (
         <AppContext.Consumer>
             {({ data, removeNeighborOfNode, handleDataChange }) => (
