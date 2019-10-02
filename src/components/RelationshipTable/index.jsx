@@ -1,28 +1,38 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import ReactTable from 'react-table';
 import { isEmpty, remove } from 'lodash';
-import { handleSaveRelationship,  removeEdgeElement } from "../../shared";
+import { handleSaveRelationship, removeEdgeElement } from "../../shared";
 import COLUMNS from './Columns';
 import 'react-table/react-table.css';
 import { AppContext } from '../../contexts';
-function ButtonFeature({ handleEditRelationship, handleSaveRelationship }) {
-    // const styles = {
-    //     backgroundColor: '#dadada',
-    //     borderRadius: '2px'
-    // }
+function ButtonFeature() {
     return (
         <div style={{ textAlign: 'right' }}>
             <input type="checkbox" id="checkbox-editmode" /> Edit mode
-
-            {/* <button style={styles} onClick={() => handleSaveRelationship()} >Save</button> */}
         </div>
     )
 }
-class RelationshipTable extends React.Component {
-    static contextType = AppContext;
-    handleRemoveNeighbor = async (node, neighbor) => {
+const Table = React.memo(props => {
+    console.log("RelationshipTable");
+    return (
+        <div>
+            <ButtonFeature />
+            <ReactTable
+                filterable
+                defaultFilterMethod={(filter, row) =>
+                    String(row[filter.id]) === filter.value}
+                data={props.data}
+                columns={props.getColumns()}
+                defaultPageSize={5}
+                showPagination={true}
+                className="-striped -highlight"
+            />
+        </div>
+    )
+})
+const RelationshipTable = React.memo(({ data, removeNeighborOfNode, handleDataChange }) => {
+    const handleRemoveNeighbor = async (node, neighbor) => {
         try {
-            const { data, removeNeighborOfNode } = this.context;
             data.forEach(async item => {
                 //tìm node để xóa neighbor & tìm neighbor để xóa node 
                 if (item.node === node) {
@@ -67,10 +77,9 @@ class RelationshipTable extends React.Component {
             console.log("failed in handleRemoveNeighbor in RelationshipTable:", error);
         }
     };
-    handleAddRelationship = (node) => {
+    const handleAddRelationship = (node) => {
         // console.log("handleAddRelationship: ", node);
         try {
-            const { data, handleDataChange } = this.context;
             data.forEach(item => {
                 if (item.node === node) {
                     const newNeighbor = {
@@ -88,8 +97,7 @@ class RelationshipTable extends React.Component {
             console.log("failed in handleAddRelationship in RelationshipTable:", error);
         }
     };
-    getColumns = () => {
-        const { data, handleDataChange } = this.context;
+    const getColumns = () => {
         const columns = [
             {
                 ...COLUMNS.Node
@@ -98,7 +106,7 @@ class RelationshipTable extends React.Component {
                 ...COLUMNS.Type
             },
             {
-                ...COLUMNS.Neighbors(data, this.handleAddRelationship, handleDataChange)
+                ...COLUMNS.Neighbors(data, handleAddRelationship, handleDataChange)
             },
             {
                 ...COLUMNS.NeighborsType(data, handleDataChange)
@@ -107,36 +115,24 @@ class RelationshipTable extends React.Component {
                 ...COLUMNS.Cost(data, handleDataChange)
             },
             {
-                ...COLUMNS.Action(this.handleRemoveNeighbor)
+                ...COLUMNS.Action(handleRemoveNeighbor)
             }
         ];
         return columns;
     }
-
-    render() {
-        console.log("RelationshipTable");
-        return (
-            <AppContext.Consumer>
-                {({ data }) => (
-                    <div>
-                        <ButtonFeature
-                            handleSaveRelationship={() => handleSaveRelationship(data, "data")}
-                            handleAddRelationship={() => this.handleAddRelationship()}
-                        />
-                        <ReactTable
-                            filterable
-                            defaultFilterMethod={(filter, row) =>
-                                String(row[filter.id]) === filter.value}
-                            data={data}
-                            columns={this.getColumns()}
-                            defaultPageSize={5}
-                            showPagination={true}
-                            className="-striped -highlight"
-                        />
-                    </div>
-                )}
-            </AppContext.Consumer>
-        )
-    }
+    return <Table data={data} getColumns={getColumns} />
+});
+const WrappedTable = (props) => {
+    return (
+        <AppContext.Consumer>
+            {({ data, removeNeighborOfNode, handleDataChange }) => (
+                <RelationshipTable
+                    data={data}
+                    removeNeighborOfNode={removeNeighborOfNode}
+                    handleDataChange={handleDataChange}
+                />
+            )}
+        </AppContext.Consumer>
+    )
 }
-export default RelationshipTable
+export default WrappedTable;

@@ -5,17 +5,30 @@ import { deserializeDataToGraphs } from '../shared';
 import { removeNeighbor } from '../helpers/graph';
 export const AppContext = React.createContext();
 export default class AppProvider extends Component {
-    state = {
-        graphs: {},
-        route: null,
-        vertex1: "",
-        vertex2: "",
-        feature: "",
-        data: [],
-        isDrawedEdges: false,
-        shortestPath: [],
-        // startIndex: 0
-    };
+    constructor() {
+        super();
+        this.state = {
+            graphs: {},
+            route: null,
+            vertex1: "",
+            vertex2: "",
+            feature: "",
+            data: [],
+            isDrawedEdges: false,
+            shortestPath: [],
+        }
+    }
+    // state = {
+    //     graphs: {},
+    //     route: null,
+    //     vertex1: "",
+    //     vertex2: "",
+    //     feature: "",
+    //     data: [],
+    //     isDrawedEdges: false,
+    //     shortestPath: [],
+    //     // startIndex: 0
+    // };
     setStateAsync = state => {
         return new Promise((resolve) => {
             this.setState(state, resolve)
@@ -25,7 +38,7 @@ export default class AppProvider extends Component {
         const reader = new FileReader();
         reader.onload = async e => {
             const graphsStr = await e.target.result;
-            try{
+            try {
                 const graphsJson = JSON.parse(graphsStr);
                 await this.handleGraphsChange(graphsJson);
             }
