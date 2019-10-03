@@ -3,9 +3,9 @@ import ReactSVG from 'react-inlinesvg';
 import _ from "lodash";
 import { drawShortestPath, } from "../../helpers";
 import { drawEdge, removeShortestPathEl, showNodes, removeEdgeElement, createNode_Pathline, addEventMouse } from "../../shared"
-import CombinedCtxProvider, { CombinedContext } from '../../contexts/combined.context';
+import CombinedCTXProvider, { CombinedContext } from '../../contexts/combined.context';
 const SVGElement = React.memo(({ listSVGArray, handleSVG }) => {
-    console.log("SVGElement");
+    console.log("SVGElement render");
     return (
         <div id="list-svg">
             {listSVGArray ? listSVGArray.map((value, i) => (
@@ -270,15 +270,15 @@ class SVGContainer extends Component {
         return this.state.listIdOfMap !== nextState.listIdOfMap;
     }
     render() {
-        const { listSVGArray } = this.context;
-        return <SVGElement listSVGArray={listSVGArray} handleSVG={this.handleSVG} />
+        return <SVGElement listSVGArray={this.context.listSVGArray} handleSVG={this.handleSVG} />
     }
 }
 const WrappedSVGContainer = props => {
+    console.log("WrappedSVGContainer render");
     return (
-        <CombinedCtxProvider>
+        <CombinedCTXProvider>
             <SVGContainer {...props} />
-        </CombinedCtxProvider>
+        </CombinedCTXProvider>
     )
 }
 export default WrappedSVGContainer
