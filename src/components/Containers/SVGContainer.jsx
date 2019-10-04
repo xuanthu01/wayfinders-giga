@@ -43,7 +43,7 @@ class SVGContainer extends Component {
                 if (waitForLoading === true)
                     return;
                 setWaiting(true);
-                document.getElementById("loadGraph").setAttribute("disabled", true);
+                // document.getElementById("loadGraph").setAttribute("disabled", true);
                 return;
             }
 
@@ -79,7 +79,7 @@ class SVGContainer extends Component {
                 const floorId = circleNode.id.substring(0, 2);
                 this.addClickEventForCirclesYAH(circleNode, floorId);
             });
-            document.getElementById("loadGraph").removeAttribute("disabled");
+            // document.getElementById("loadGraph").removeAttribute("disabled");
             showNodes();
             this.drawEdgeFromGraphs(false, undefined);
             setWaiting(false);
@@ -190,11 +190,11 @@ class SVGContainer extends Component {
                     this.setState({ vertex1State: e.target.id });
                     this.isFindingPath = true;
                 } else {
-
+                    this.isFindingPath = false;
                     if (e.target.id === this.state.vertex1State) {
                         alert("Vertex cannot connect it self or loaded this map more than one time");
                         this.setState({ vertex1State: "", vertex2State: "" });
-                        this.isFindingPath = false;
+
                         return;
                     }
                     document.getElementById("second-vertex").value = e.target.id;
@@ -203,7 +203,6 @@ class SVGContainer extends Component {
                     let pathArrData = drawShortestPath(this.state.vertex1State, this.state.vertex2State, route);
                     // console.log("pathArrData:", pathArrData);
                     setShortestPath(pathArrData);
-                    this.isFindingPath = false;
                 }
             }
         } catch (error) {
@@ -270,6 +269,7 @@ class SVGContainer extends Component {
         return this.state.listIdOfMap !== nextState.listIdOfMap;
     }
     render() {
+        console.log("SVGContainer render");
         return <SVGElement listSVGArray={this.context.listSVGArray} handleSVG={this.handleSVG} />
     }
 }
