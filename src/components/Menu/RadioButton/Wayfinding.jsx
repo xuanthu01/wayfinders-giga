@@ -42,14 +42,14 @@ const VertextureComponent = (props) => {
     let result;
     if (shortestPath)
         result = Object.keys(shortestPath).map(key => [shortestPath[key]]);
-    const listStep = result.map((step, index) => {
+    const listStep = result ? result.map((step, index) => {
         return <div key={index}>
             <p>
                 <PathStep key={index} step={step} index={index + 1} />
             </p>
             <br />
         </div>
-    });
+    }) : [];
     return (
         <div>
             <input type="text" id="first-vertex" />
