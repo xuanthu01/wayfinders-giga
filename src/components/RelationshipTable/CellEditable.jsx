@@ -2,57 +2,29 @@ import React, { Component } from 'react';
 // import { If } from  "../../shared";
 import { Cell } from './Cell';
 
-const CellEdit = ({ data, neighbor, propertyToEdit, onChangeData }) => {
+const CellEdit = ({ data, neighbor, property, onChangeData }) => {
     const onBlur = (e) => {
-        if (neighbor[`${propertyToEdit}`] !== e.target.innerHTML) {
-            if (propertyToEdit === 'cost')
-                neighbor[`${propertyToEdit}`] = Number(e.target.innerHTML);
-            else neighbor[`${propertyToEdit}`] = e.target.innerHTML;
+        if (neighbor[`${property}`] !== e.target.innerHTML) {
+            if (property === 'cost')
+                neighbor[`${property}`] = Number(e.target.innerHTML);
+            else neighbor[`${property}`] = e.target.innerHTML;
             onChangeData(data);
         }
     }
     return <Cell
         neighbor={neighbor}
-        propertyToEdit={propertyToEdit}
+        property={property}
         canEdit={true}
         onBlur={onBlur}
     />
 }
-class CellEditable extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            count: 0
-        }
-        this.handleButtonAdd = this.handleButtonAdd.bind(this);
-    }
-    handleButtonAdd(data, node, onChangeData) {
-        let { count } = this.state;
-        this.setState({ count: count++ });
-        data.forEach(item => {
-            if (item.node === node) {
-                const newNeighbor = {
-                    id: 'new-neighbor-' + count,
-                    name: 'new Neighbor ' + count,
-                    type: 'path',
-                    cost: 1
-                }
-                item.neighbors.push(newNeighbor);;
-            }
-        });
-        onChangeData(data);
-    }
-    ButtonAddRelations = ({ data, node, onChangeData }) => {
-        return (<button style={{ float: 'right' }} onClick={() => this.handleButtonAdd(data, node, onChangeData)} >+</button>)
-    }
-    render() {
-        // console.log(this.props);
-        const { data, node, neighbor, propertyToEdit, onChangeData } = this.props;
-        return (
-            <div>
-                <CellEdit key={`cell-edit-${node}-${neighbor}`} data={data} node={node} neighbor={neighbor} propertyToEdit={propertyToEdit} onChangeData={onChangeData} />
-            </div>
-        )
-    }
+const CellEditable = props => {
+    const { data, node, neighbor, property, onChangeData } = props;
+    return (
+        <div>
+            <CellEdit key={`cell-edit-${node}-${neighbor}`} data={data} node={node} neighbor={neighbor} property={property} onChangeData={onChangeData} />
+        </div>
+    )
 }
+
 export default CellEditable;

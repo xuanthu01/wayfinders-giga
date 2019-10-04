@@ -1,13 +1,18 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import ReactTable from 'react-table';
 import { isEmpty, remove } from 'lodash';
 import { handleSaveRelationship, removeEdgeElement } from "../../shared";
 import COLUMNS from './Columns';
 import 'react-table/react-table.css';
 import { AppContext } from '../../contexts';
-function ButtonFeature() {
+function ButtonFeature({ addNewRelationship }) {
+    const [count, setCount] = useState(0);
     return (
         <div style={{ textAlign: 'right' }}>
+            <button id="button-new" onClick={() => {
+                addNewRelationship(count);
+                setCount(count + 1);
+            }}>New</button>
             <input type="checkbox" id="checkbox-editmode" /> Edit mode
         </div>
     )
@@ -16,7 +21,6 @@ const Table = React.memo(props => {
     console.log("RelationshipTable");
     return (
         <div>
-            <ButtonFeature />
             <ReactTable
                 filterable
                 defaultFilterMethod={(filter, row) =>
@@ -32,7 +36,7 @@ const Table = React.memo(props => {
 })
 const RelationshipTable = React.memo(({ data, removeNeighborOfNode, handleDataChange }) => {
     console.log("React Relationship Table");
-    
+    const [count, setCount] = useState(0);
     const handleRemoveNeighbor = async (node, neighbor) => {
         try {
             data.forEach(async item => {
@@ -85,27 +89,52 @@ const RelationshipTable = React.memo(({ data, removeNeighborOfNode, handleDataCh
             data.forEach(item => {
                 if (item.node === node) {
                     const newNeighbor = {
-                        id: 'new-neighbor-',
-                        name: 'new Neighbor ',
-                        type: 'path',
+                        id: 'new-node-' + count,
+                        name: 'new Node ' + count,
+                        type: 'unknown',
                         cost: 1
                     }
                     item.neighbors.push(newNeighbor);;
                 }
             });
             handleDataChange(data);
+            setCount(count + 1);
         }
         catch (error) {
             console.log("failed in handleAddRelationship in RelationshipTable:", error);
         }
     };
+    const addNewRelationship = count => {
+        try {
+            const newRelationship = {
+                node: {
+                    id: "node-" + count,
+                    name: "new-name-" + count,
+                    type: 'unknown',
+                },
+                neighbors: [
+                    {
+                        id: "other-node-" + count,
+                        name: "new-neighbor-name-" + count,
+                        type: 'unknown',
+                        cost: 1
+                    }
+                ]
+            }
+            data.push(newRelationship);
+            handleDataChange(data);
+        }
+        catch (error) {
+            console.log("failed in addNewRelations:", error);
+        }
+    }
     const getColumns = () => {
         const columns = [
             {
-                ...COLUMNS.Node
+                ...COLUMNS.Node(data, handleDataChange)
             },
             {
-                ...COLUMNS.Type
+                ...COLUMNS.Type(data, handleDataChange)
             },
             {
                 ...COLUMNS.Neighbors(data, handleAddRelationship, handleDataChange)
@@ -122,11 +151,16 @@ const RelationshipTable = React.memo(({ data, removeNeighborOfNode, handleDataCh
         ];
         return columns;
     }
-    return <Table data={data} getColumns={getColumns} />
+    return (
+        <div>
+            <ButtonFeature addNewRelationship={addNewRelationship} />
+            <Table data={data} getColumns={getColumns} />
+        </div>
+    )
 });
 const WrappedTable = (props) => {
     console.log("wrapped table");
-    
+
     return (
         <AppContext.Consumer>
             {({ data, removeNeighborOfNode, handleDataChange }) => (

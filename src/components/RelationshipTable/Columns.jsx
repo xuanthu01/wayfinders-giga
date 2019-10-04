@@ -4,26 +4,36 @@ import CellEditable from './CellEditable';
 import matchSorter from 'match-sorter';
 const styles = {
     backgroundColor: '#dadada',
-    // borderRadius: '2px',
     marginTop: 5,
     marginBottom: 0
 }
-const Node = {
-    Header: 'Node',
-    id: 'node-root',
-    accessor: d => d.node.id,
-    Cell: props => <Cell key={'node-' + props.original.node.id} node={props.original.node} property='id' />,
-    filterMethod: (filter, rows) => matchSorter(rows, filter.value, { keys: ["node-root"] }),
-    filterAll: true
+
+const Node = (data, onChangeData) => {
+    return {
+        Header: 'Node',
+        id: 'node-root',
+        accessor: d => d.node.id,
+        Cell: props => {
+            const { node } = props.original;
+            return <CellEditable key={'node-' + node.id} data={data} neighbor={node} property='id' onChangeData={onChangeData} />
+        },
+        filterMethod: (filter, rows) => matchSorter(rows, filter.value, { keys: ["node-root"] }),
+        filterAll: true
+    }
 };
-const Type = {
-    Header: 'Type',
-    accessor: 'node.type',
-    id: 'node-type',
-    width: 150,
-    Cell: props => <Cell key={'node-type' + props.original.node.id} node={props.original.node} property='type' />,
-    filterMethod: (filter, rows) => matchSorter(rows, filter.value, { keys: ["node-type"] }),
-    filterAll: true
+const Type = (data, onChangeData) => {
+    return {
+        Header: 'Type',
+        accessor: 'node.type',
+        id: 'node-type',
+        width: 150,
+        Cell: props => {
+            const { node } = props.original;
+            return <CellEditable key={'node-type-' + node.id} data={data} neighbor={node} property='type' onChangeData={onChangeData} />
+        },
+        filterMethod: (filter, rows) => matchSorter(rows, filter.value, { keys: ["node-type"] }),
+        filterAll: true
+    }
 };
 const Neighbors = (data, handleButtonAdd, onChangeData) => {
     return {
@@ -33,7 +43,7 @@ const Neighbors = (data, handleButtonAdd, onChangeData) => {
         Cell: props => {
             const { node, neighbors } = props.original;
             const neighborCell = neighbors.map(neighbor => {
-                return <CellEditable key={'neighbor-' + neighbor.id} data={data} node={node} neighbor={neighbor} propertyToEdit='id' onChangeData={onChangeData} />
+                return <CellEditable key={'neighbor-' + neighbor.id} data={data} node={node} neighbor={neighbor} property='id' onChangeData={onChangeData} />
             });
             neighborCell.push(<button key={`button-add-neighbor-${node.id}`} style={{ float: 'right' }} onClick={() => handleButtonAdd(node, onChangeData)} >+</button>);
             return neighborCell;
@@ -51,7 +61,7 @@ const NeighborsType = (data, onChangeData) => {
         Cell: props => {
             const { node, neighbors } = props.original;
             return neighbors.map(neighbor => {
-                return <CellEditable key={`neighbor-type-${neighbor.id}`} data={data} node={node} neighbor={neighbor} propertyToEdit='type' onChangeData={onChangeData} />
+                return <CellEditable key={`neighbor-type-${neighbor.id}`} data={data} node={node} neighbor={neighbor} property='type' onChangeData={onChangeData} />
             })
         },
         filterMethod: (filter, rows) =>
@@ -69,7 +79,7 @@ const Cost = (data, onChangeData) => {
         Cell: props => {
             const { node, neighbors } = props.original;
             return neighbors.map(neighbor => {
-                return <CellEditable key={'cost-' + neighbor.id} data={data} node={node} neighbor={neighbor} propertyToEdit='cost' onChangeData={onChangeData} />
+                return <CellEditable key={'cost-' + neighbor.id} data={data} node={node} neighbor={neighbor} property='cost' onChangeData={onChangeData} />
             })
         },
         filterMethod: (filter, rows) =>
